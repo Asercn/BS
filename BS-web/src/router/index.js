@@ -81,8 +81,8 @@ export const constantRoutes = [
     children: [{
       path: 'roommanagement',
       name: 'Roommanagement',
-      component: () => import('@/views/roommanagement/test1'),
-      meta: {title: '房间管理', icon: 'el-icon-s-home'}
+      component: () => import('@/views/roommanagement/roommanagement'),
+      meta: { title: '房间管理', icon: 'el-icon-s-home' }
     }]
   },
 

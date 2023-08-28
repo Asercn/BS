@@ -9,22 +9,11 @@
       <el-card class="dashboard-box-card">
         <p style="font-weight: bold;">今日数据</p>
         <el-table :data="tableData">
-          <el-table-column label="#" width="100"></el-table-column>
+          <el-table-column label="#" align="left"></el-table-column>
           <el-table-column label="开房(间)" prop="oroom"></el-table-column>
-          <el-table-column label="退房(间)" prop="boroom"></el-table-column>
           <el-table-column label="空房(间)" prop="eroom"></el-table-column>
-          <el-table-column label="#" width="100"></el-table-column>
+          <el-table-column label="#" align="right"></el-table-column>
         </el-table>
-        <!--        分页-->
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="searchModel.pageNo"
-          :page-sizes="[5, 10, 20, 50]"
-          :page-size="searchModel.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total">
-        </el-pagination>
       </el-card>
     </el-main>
   </div>
@@ -33,6 +22,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import roomApi from '@/api/room'
 
 export default {
   name: 'Dashboard',
@@ -43,21 +33,20 @@ export default {
   },
   data() {
     return {
+      tableData: [],
       oroom: null,
-      boroom: null,
-      eroom: null,
-      total: 0,
-      searchModel: {
-        pageNo: 1,
-        pageSize: 5
-      }
+      eroom: null
     }
   },
   methods: {
-    handleSizeChange(pageSize) {
-    },
-    handleCurrentChange(pageNo) {
+    getRoomInfo() {
+      roomApi.getRoomInfo().then(rep => {
+        this.tableData = rep.data.tableData
+      })
     }
+  },
+  created() {
+    this.getRoomInfo()
   }
 }
 

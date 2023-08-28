@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.as200.bsbd.sys.mapper.RoomMapper">
-
+    <select id="getRoomInfo" resultType="map">
+        select
+            @open_room := count(distinct room_id)'oroom',
+	(SELECT COUNT(room_id) from x_room) - @open_room'eroom'
+        from
+            x_customer_room AS a
+        where
+            a.end_date >= CURDATE()
+    </select>
 </mapper>

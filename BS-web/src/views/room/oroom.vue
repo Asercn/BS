@@ -1,6 +1,6 @@
 <template>
   <el-main>
-    <h3>未开房间</h3>
+    <h3>房间状态</h3>
     <el-divider/>
     <el-card>
       <el-input v-model="searchModel.roomname" placeholder="房间号" style="width: 180px; margin-right: 0.5rem" clearable></el-input>

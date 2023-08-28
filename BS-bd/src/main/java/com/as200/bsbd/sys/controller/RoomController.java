@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +33,16 @@ import java.util.Map;
 public class RoomController {
     @Autowired
     private IRoomService roomService;
-    // 查询所有房间
-    // 测试方法
+    // 查询所有房间信息
     @GetMapping("/all")
-    public Result<List<Room>> getAllRoom(){
-        List<Room> data = roomService.list();
+    public Result<Map<String, Object>> getAllRoom(@RequestParam(value = "pageNo")Long pageNo,
+                                         @RequestParam(value = "pageSize")Long pageSize){
+        LambdaQueryWrapper<Room> wrapper = new LambdaQueryWrapper<>();
+        Page<Room> page = new Page<>(pageNo, pageSize);
+        roomService.page(page, wrapper);
+        Map<String, Object> data = new HashMap<>();
+        data.put("roomData",page.getRecords());
+        data.put("total", page.getTotal());
         return Result.success(data, "查询成功");
     }
     // 查询房间
@@ -46,12 +52,29 @@ public class RoomController {
                                                   @RequestParam(value = "pageSize") Long pageSize){
         LambdaQueryWrapper<Room> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(StringUtils.hasLength(roomName), Room::getRoomName, roomName);
+        wrapper.orderByDesc(Room::getRoomId);
         Page<Room> page = new Page<>(pageNo, pageSize);
         roomService.page(page, wrapper);
         Map<String, Object> data = new HashMap();
         data.put("total", page.getTotal());
         data.put("rows", page.getRecords());
         return Result.success(data,"查询成功");
+    }
+
+
+    // 查询开出去的房间数量，没开出去的房间数量
+    @GetMapping("/info")
+    public Result<Map<String, Object>> RoomInfo(){
+        Map<String, Object> data = new HashMap<>();
+        data.put("tableData", roomService.getRoomInfo());
+        return Result.success(data,"查询成功");
+    }
+
+    // 新增房间
+    @PostMapping
+    public Result<List<Room>> addRoom(@RequestBody Room room){
+        roomService.save(room);
+        return Result.success("增加成功");
     }
 
 

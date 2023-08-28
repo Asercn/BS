@@ -41,7 +41,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             String key = "user:" + UUID.randomUUID();
 //            存入redis
             loginUser.setPassword(null);
-            redisTemplate.opsForValue().set(key, loginUser, 30, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(key, loginUser, 720, TimeUnit.MINUTES);
 //            返回数据
             Map<String, Object> data = new HashMap<>();
             data.put("token", key);

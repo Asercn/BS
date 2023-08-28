@@ -3,6 +3,9 @@ package com.as200.bsbd.sys.mapper;
 import com.as200.bsbd.sys.entity.Room;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  *  Mapper 接口
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RoomMapper extends BaseMapper<Room> {
 
+    List<Map<String,String>> getRoomInfo();
 }

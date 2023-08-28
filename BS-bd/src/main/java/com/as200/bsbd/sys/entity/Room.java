@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author as200
@@ -24,6 +24,17 @@ public class Room implements Serializable {
     private String roomName;
 
     private Integer roomPrice;
+
+
+    private String roomType;
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
 
     public Integer getRoomId() {
         return roomId;

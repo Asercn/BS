@@ -11,7 +11,7 @@
   </el-card>
   <el-card>
     <el-table :data="customerInfo">
-      <el-table-column label="#" width="80" align="left"></el-table-column>
+      <el-table-column type="index" label="#" width="80" align="left"></el-table-column>
       <el-table-column prop="name" label="姓名" width="150"></el-table-column>
       <el-table-column prop="phone" label="手机号" width="180"></el-table-column>
       <el-table-column prop="id_number" label="身份证号" width="200"></el-table-column>
@@ -27,7 +27,7 @@
       @current-change="handleCurrentChange"
       :current-page="searchModel.pageNo"
       :page-size="searchModel.pageSize"
-      :page-sizes="[5, 10, 20, 50]"
+      :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
