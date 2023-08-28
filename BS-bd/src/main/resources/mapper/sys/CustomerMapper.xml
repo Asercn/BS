@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.as200.bsbd.sys.mapper.CustomerMapper">
+    <select id="getRoomNamebyCustomer" resultType="Map">
+        SELECT a.`name`, a.phone, a.id_number, c.room_name, b.start_date, b.end_date, c.room_price
+        FROM x_customer_room AS b
+        LEFT JOIN x_customer AS a ON b.customer_id = a.id
+        LEFT JOIN x_room AS c ON b.room_id = c.room_id
+        <where>
+            <if test="roomName != null and roomName != ''">
+                AND c.room_name = #{roomName}
+            </if>
+            <if test="customerName != null and customerName != ''">
+                AND a.`name` = #{customerName}
+            </if>
+            <if test="customerPhone != null and customerPhone != ''">
+                AND a.phone = #{customerPhone}
+            </if>
+        </where>
+        LIMIT #{offset},#{pageSize}
+    </select>
+    <select id="getTotalbyCustomerRoom" resultType="Integer">
+        SELECT COUNT(*)
+        FROM x_customer_room
+    </select>
+</mapper>

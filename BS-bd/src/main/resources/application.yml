@@ -1,0 +1,13 @@
+server:
+  port: 9999
+spring:
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/bs
+  redis:
+    port: 6379
+    host: localhost
+logging:
+  level:
+    com.as200.bsbd: debug
