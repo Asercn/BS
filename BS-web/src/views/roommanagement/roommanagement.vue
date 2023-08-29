@@ -4,7 +4,6 @@
     <el-divider/>
     <el-card>
       <el-row class="buttonRow">
-        <el-button type="primary" icon="el-icon-plus" circle @click="openAddUI"></el-button>  <!-- 新增按钮-->
         <!--        新增框-->
         <el-dialog @close="clearFrom" :title="roomTotal" :visible.sync="dialogFormVisible" width="30rem">
           <el-form :model="roomForm" :rules="rules" ref="roomFormref">
@@ -24,16 +23,19 @@
           </div>
         </el-dialog>
 
+        <el-button type="primary" icon="el-icon-plus" circle @click="openEditUI(null)"></el-button>  <!-- 新增按钮-->
       </el-row>
       <el-divider/>
       <el-table :data="roomData">
         <el-table-column type="index" label="#" align="left" width="180px"></el-table-column>
-        <el-table-column prop="roomName" label="房间名"></el-table-column>
+        <el-table-column prop="roomName" label="房间名" align="center"></el-table-column>
         <el-table-column prop="roomPrice" label="房价"></el-table-column>
         <el-table-column prop="roomType" label="房间类型" align="center"></el-table-column>
         <el-table-column label="操作"  width="250"  align="center">
-          <el-button type="warning" icon="el-icon-edit" circle></el-button>  <!-- 编辑按钮-->
-          <el-button type="danger" icon="el-icon-delete" circle></el-button>  <!-- 删除按钮-->
+          <template slot-scope="scope">
+            <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="openEditUI(scope.row.roomId)"></el-button>  <!-- 编辑按钮-->
+            <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="deleteRoom(scope.row)"></el-button>  <!-- 删除按钮-->
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -83,11 +85,31 @@ export default {
     }
   },
   methods: {
+    deleteRoom(room) {
+      this.$confirm(`删除房间:${room.roomName}, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        roomApi.deleteRoom(room.roomId).then(rep => {
+          this.$message({
+            type: 'success',
+            message: rep.message
+          })
+          this.getRoomData()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
     saveRoomForm() {  // 表单验证
       this.$refs.roomFormref.validate(vaild => {
         if (vaild) {  // 验证通过
           // 提交后台
-          roomApi.addRoom(this.roomForm).then(rep => {
+          roomApi.saveRoom(this.roomForm).then(rep => {
             // 提交成功提示
             this.$message({
               message: rep.message,
@@ -106,12 +128,16 @@ export default {
       this.roomForm = {}
       this.$refs.roomFormref.clearValidate()
     },
-    openAddUI() {
-      this.roomTotal = '新增房间'
-      this.dialogFormVisible = true
-    },
-    openEditUI() {
-      this.roomTotal = '修改房间'
+    openEditUI(id) {
+      if (id == null) {
+        this.roomTotal = '新增房间'
+      } else {
+        this.roomTotal = '修改房间信息'
+        // 根据房间ID查询房间信息
+        roomApi.getRoomById(id).then(rep => {
+          this.roomForm = rep.data
+        })
+      }
       this.dialogFormVisible = true
     },
     handleSizeChange(pageSize) {

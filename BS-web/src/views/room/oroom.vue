@@ -7,7 +7,37 @@
       <el-button @click="getRoomList" type="primary">查询</el-button>
     </el-card>
     <el-card class="oroom_body example-pagination-block">
-      <el-button class="r el-icon-s-home" v-for="(v,i) in orooms" :key="i">{{ v.roomName }}</el-button>
+      <!-- Form -->
+      <el-dialog :title="customerRoomTitle" :visible.sync="dialogFormVisible" @close="clearForm()" width="35rem">
+        <el-form :model="customerRoomForm" >
+          <el-form-item label="姓名:" :label-width="formLabelWidth" >
+            <el-input v-model="customerRoomForm.customerName" autocomplete="off" style="width: 10rem;"></el-input>
+          </el-form-item>
+          <el-form-item label="性别:" :label-width="formLabelWidth">
+            <el-select v-model="sex" placeholder="请选择" style="width: 6rem;">
+              <el-option
+                v-for="item in sexs"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="手机号:" :label-width="formLabelWidth">
+            <el-input v-model="customerRoomForm.customerIdNumber" autocomplete="off" style="width: 15rem;"></el-input>
+          </el-form-item>
+          <el-form-item label="身份证号:" :label-width="formLabelWidth">
+            <el-input v-model="customerRoomForm.customerIdNumber" autocomplete="off" style="width: 15rem;"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        </div>
+      </el-dialog>
+      <template>
+        <el-button class="r el-icon-s-home" v-for="(v,i) in orooms" :key="i" @click="openRoomUI(v.roomName)">{{ v.roomName }}</el-button>
+      </template>
       <!--        分页-->
       <el-pagination
         @size-change="handleSizeChange"
@@ -28,16 +58,41 @@ import roomApi from '@/api/room'
 export default {
   data() {
     return {
+      sex: null,
+      sexs: [{
+        value: '男',
+        label: '男'
+      }, {
+        value: '女',
+        label: '女'
+      }, {
+        value: '其它',
+        label: '其它'
+      }],
+      customerRoomForm: {
+        customerName: null,
+        customerIdNumber: null
+      },
+      customerRoomTitle: null,
+      dialogFormVisible: false,
+      formLabelWidth: '7rem',
       total: 0,
       orooms: [],
-      roomname: null,
       searchModel: {
+        roomname: null,
         pageNo: 1,
         pageSize: 10
       }
     }
   },
   methods: {
+    openRoomUI(roomname) {
+      this.customerRoomTitle = '房间:' + roomname
+      this.dialogFormVisible = true
+    },
+    clearForm() {
+      this.customerRoomForm = {}
+    },
     handleSizeChange(pageSize) {
       this.searchModel.pageSize = pageSize
       this.getRoomList()

@@ -34,6 +34,35 @@ export default {
       method: 'post',
       data: roomForm
     })
+  },
+  updateRoom(roomForm) {
+    return request({
+      url: '/room',
+      method: 'put',
+      data: roomForm
+    })
+  },
+  deleteRoom(roomId) {
+    return request({
+      url: `/room/${roomId}`,
+      method: 'delete'
+    })
+  },
+  getRoomById(roomId) {
+    return request({
+      url: `/room/${roomId}`,
+      method: 'get'
+    })
+  },
+  saveRoom(roomForm) {
+    if (roomForm.roomId == null || roomForm.roomId == undefined) {
+      // alert('add')
+      return this.addRoom(roomForm)
+    } else {
+      // alert('update')
+      return this.updateRoom(roomForm)
+    }
   }
+
 }
 

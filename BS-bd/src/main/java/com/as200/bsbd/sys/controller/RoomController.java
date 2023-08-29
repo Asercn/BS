@@ -52,7 +52,7 @@ public class RoomController {
                                                   @RequestParam(value = "pageSize") Long pageSize){
         LambdaQueryWrapper<Room> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(StringUtils.hasLength(roomName), Room::getRoomName, roomName);
-        wrapper.orderByDesc(Room::getRoomId);
+        wrapper.orderByAsc(Room::getRoomName);
         Page<Room> page = new Page<>(pageNo, pageSize);
         roomService.page(page, wrapper);
         Map<String, Object> data = new HashMap();
@@ -77,6 +77,25 @@ public class RoomController {
         return Result.success("增加成功");
     }
 
+    // 修改房间信息
+    @PutMapping
+    public Result<?> updateRoom(@RequestBody Room room){
+        roomService.updateById(room);
+        return Result.success("修改成功");
+    }
 
+    // 根据房间ID获取房间信息
+    @GetMapping("/{roomId}")
+    public Result<Room> getRoomById(@PathVariable(value = "roomId") Integer roomId){
+        Room room = roomService.getById(roomId);
+        return Result.success(room);
+    }
+
+    // 根据房间ID删除房间
+    @DeleteMapping("/{roomId}")
+    public Result<?> deleteRoom(@PathVariable(value = "roomId") Integer roomId){
+        roomService.removeById(roomId);
+        return Result.success("删除成功");
+    }
 
 }
