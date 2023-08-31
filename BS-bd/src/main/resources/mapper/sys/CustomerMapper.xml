@@ -17,6 +17,7 @@
                 AND a.phone = #{customerPhone}
             </if>
         </where>
+        ORDER BY b.end_date desc
         LIMIT #{offset},#{pageSize}
     </select>
     <select id="getTotalbyCustomerRoom" resultType="Integer">

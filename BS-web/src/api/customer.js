@@ -13,6 +13,14 @@ export default {
         roomName: searchModel.roomName
       }
     })
+  },
+
+  addCustomer(customer) {
+    return request({
+      method: 'post',
+      url: '/customer',
+      data: customer
+    })
   }
 }
 

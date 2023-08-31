@@ -36,6 +36,12 @@ public class CustomerController {
     @Autowired
     private ICustomerService customerService;
 
+
+    @GetMapping
+    public Result<?> getCustomer(){
+        List<Customer> customer = customerService.list();
+        return Result.success(customer, "查询成功");
+    }
     @GetMapping("/list")
     public Result<Map<String, Object>> custormerRoomList(@RequestParam(value = "pageNo") Long pageNo,
                                                          @RequestParam(value = "pageSize") Long pageSize,
@@ -46,5 +52,13 @@ public class CustomerController {
         data.put("total", customerService.getTotal());  // 获取行数
         data.put("customerInfo", customerService.getRoomName(roomName,customerName,customerPhone,pageNo,pageSize));//根据房间查信息
         return Result.success(data, "查询成功");
+    }
+
+    @PostMapping
+    public Result<?> addCustomer(@RequestBody Customer customer){
+        customerService.save(customer);
+        Map<String, Object> data = new HashMap<>();
+        data.put("customer", customerService.getById(customer.getId()));
+        return Result.success(data, "客户信息添加成功");
     }
 }

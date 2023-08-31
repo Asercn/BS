@@ -44,7 +44,7 @@ export default {
       customerInfo: [],
       searchModel: {
         pageNo: 1,
-        pageSize: 5,
+        pageSize: 10,
         roomName: null,
         customerName: null,
         customerPhone: null
