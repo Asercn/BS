@@ -6,6 +6,7 @@ import com.as200.bsbd.sys.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,4 +54,14 @@ public class UserController {
         return Result.success();
     }
 
+    // 根据传入的用户ID或者不传入用户ID获取到用户信息，以及用户权限名称
+    @GetMapping
+    public Result<?> getUserInfoOrByUserID(@RequestParam(value = "pageNo")Long pageNo,
+                                            @RequestParam(value = "pageSize")Long pageSize,
+                                            @RequestParam(value = "userID", required = false)Integer userID){
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",userService.count());
+        data.put("userInfo", userService.getUserInfoOrByUserID(userID,pageNo,pageSize));
+        return Result.success(data, "查询成功");
+    }
 }

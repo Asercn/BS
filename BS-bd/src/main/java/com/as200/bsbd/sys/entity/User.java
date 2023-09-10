@@ -32,6 +32,15 @@ public class User implements Serializable {
     private String avatar;
 
     private Integer deleted;
+    private Integer state;
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
     public Integer getId() {
         return id;
@@ -92,13 +101,14 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-            "id = " + id +
-            ", username = " + username +
-            ", password = " + password +
-            ", email = " + email +
-            ", phone = " + phone +
-            ", avatar = " + avatar +
-            ", deleted = " + deleted +
-        "}";
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", deleted=" + deleted +
+                ", state=" + state +
+                '}';
     }
 }

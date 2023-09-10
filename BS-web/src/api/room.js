@@ -55,7 +55,7 @@ export default {
     })
   },
   saveRoom(roomForm) {
-    if (roomForm.roomId == null || roomForm.roomId == undefined) {
+    if (roomForm.roomId === null || roomForm.roomId === undefined) {
       // alert('add')
       return this.addRoom(roomForm)
     } else {

@@ -7,4 +7,18 @@
         where x_user_role.id = #{userId}
 
     </select>
+    <select id="getUserInfoOrByUserID" parameterType="Integer" resultType="map">
+        select
+            U.*, R.role_desc
+        from
+            x_user_role AS UR
+            LEFT JOIN x_role AS R ON  UR.role_id = R.role_id
+            LEFT JOIN x_user AS U ON UR.user_id = U.id
+        <where>
+            <if test="userID != null and userID != ''">
+                AND U.id = #{userID}
+            </if>
+        </where>
+        LIMIT #{pageNo}, #{pageSize}
+    </select>
 </mapper>

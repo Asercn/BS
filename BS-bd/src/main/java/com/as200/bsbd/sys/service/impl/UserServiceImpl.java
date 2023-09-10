@@ -73,4 +73,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void logout(String token) {
         redisTemplate.delete(token);
     }
+
+    @Override
+    public Object getUserInfoOrByUserID(Integer userID, Long pageNo, Long pageSize) {
+        Long offset = (pageNo-1) * pageSize;
+        return this.baseMapper.getUserInfoOrByUserID(userID, offset, pageSize);
+    }
 }

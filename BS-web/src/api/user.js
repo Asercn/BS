@@ -22,3 +22,14 @@ export function logout() {
     method: 'post'
   })
 }
+export function getUserInfoOrByUserID(searchModel) {
+  return request({
+    url: '/user',
+    method: 'get',
+    params: {
+      pageNo: searchModel.pageNo,
+      pageSize: searchModel.pageSize,
+      userID: searchModel.userID
+    }
+  })
+}

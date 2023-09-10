@@ -52,7 +52,7 @@
           <el-button type="primary" @click="saveCustomerRoomForm()">确 定</el-button>
         </div>
       </el-dialog>
-      <el-button class="r el-icon-s-home" v-for="(v,i) in orooms" :key="i" @click="openRoomUI(v)">{{ v.roomName }}</el-button>
+      <el-button class="r el-icon-s-home" v-for="(v,i) in orooms" :class="setRoomState(v.roomId) " :key="i" @click="openRoomUI(v)">{{ v.roomName }}</el-button>
       <!--        分页-->
       <el-pagination
         @size-change="handleSizeChange"
@@ -153,10 +153,36 @@ export default {
         roomname: null,
         pageNo: 1,
         pageSize: 10
-      }
+      },
+      // status: ''
     }
   },
   methods: {
+    // 还不知道怎么用来改变状态
+    async setRoomState(roomId) {
+      try {
+        // 获取到这个按钮的房间的ID
+        // 查询这个房间的最大的endDate是否大于等于今天，
+        // 如果是今天则为'active'，否则为'normal'
+        const response = await customerroomApi.getLastCustomerRoomByRoomId(roomId)
+        // console.log(response)
+        if (response.data === null) {
+          return 'normalState'
+        }
+        const customerRoom = response.data.customerRoom
+        console.log('时间' + new Date(customerRoom.endDate))
+        if (new Date(customerRoom.endDate) > new Date()) {
+          console.log('房间已开')
+          return 'activeState'
+        } else {
+          console.log('房间空')
+          return 'normalState'
+        }
+      } catch (error) {
+        console.log('获取信息失败', error)
+        return 'normalState'
+      }
+    },
     saveCustomerRoomForm() {
       // 获取房间名字
       this.customerRoomForm.roomName = this.customerRoomTitle
@@ -223,6 +249,8 @@ export default {
       this.customerRoomTitle = '房间:' + v.roomName
       this.customerRoomForm.roomId = v.roomId
       this.dialogFormVisible = true
+      // 返回roomId
+      console.log(v.roomId)
     },
     clearForm() {
       this.customerRoomForm = {}  // 清除表单信息
@@ -248,6 +276,12 @@ export default {
     this.getRoomList()
   },
   computed: {
+    // computedClass() {
+    //   return {
+    //     'activeState': this.status === 'active',
+    //     'normalState': this.status === 'normal'
+    //   }
+    // }
     // utcDateValue() {
     //   if (this.customerRoomForm.startDate) {
     //     return new Date(Date.UTC(
@@ -279,4 +313,12 @@ export default {
 .r::before {
   font-size: 150%;
 }
+
+.activeState {
+  background-color: green;
+  color: white;
+}
+.normalState {
+}
+
 </style>

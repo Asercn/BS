@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
 export default {
-  getCustomerRoomById(Id) {
+  getLastCustomerRoomByRoomId(Id) {
     return request({
-      url: `/customerRoom/${Id}`,
+      url: `/customerRoom/last/${Id}`,
       method: 'get'
     })
   },

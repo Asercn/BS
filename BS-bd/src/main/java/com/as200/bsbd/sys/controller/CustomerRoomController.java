@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,13 +32,28 @@ public class CustomerRoomController {
 
     // 根据房间ID查询开房的信息
     @GetMapping("/{roomId}")
-    public Result<?> getCustomerRoomById(@PathVariable(value = "roomId")Integer roomId){
+    public Result<?> getCustomerRoomByRoomId(@PathVariable(value = "roomId")Integer roomId){
         LambdaQueryWrapper<CustomerRoom> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(roomId != null, CustomerRoom::getRoomId, roomId);
         wrapper.orderByDesc(CustomerRoom::getEndDate);
         Map<String,Object> data = new HashMap<>();
         data.put("customerRoom",customerRoomService.list(wrapper));
         return Result.success(data,"查询成功");
+    }
+
+    @GetMapping("/last/{roomId}")
+    public Result<?> getLastCustomerRoomByRoomId(@PathVariable(value = "roomId")Integer roomId){
+        LambdaQueryWrapper<CustomerRoom> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(roomId != null, CustomerRoom::getRoomId, roomId);
+        wrapper.orderByDesc(CustomerRoom::getEndDate);
+        List<CustomerRoom> customerRoomList = customerRoomService.list(wrapper);
+        if (!customerRoomList.isEmpty()){
+            Map<String,Object> data = new HashMap<>();
+            data.put("customerRoom",customerRoomList.get(0));
+            return Result.success(data,"查询成功");
+        }else{
+            return Result.success("房间未开");
+        }
     }
 
 

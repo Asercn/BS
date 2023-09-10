@@ -15,6 +15,12 @@
           <el-table-column label="#" align="right"></el-table-column>
         </el-table>
       </el-card>
+      <el-collapse>
+        <el-collapse-item title="日历">
+          <el-calendar v-model="calendar">
+          </el-calendar>
+        </el-collapse-item>
+      </el-collapse>
     </el-main>
   </div>
 
@@ -33,6 +39,8 @@ export default {
   },
   data() {
     return {
+      drawer: false,
+      calendar: new Date(),
       tableData: [],
       oroom: null,
       eroom: null
@@ -65,5 +73,10 @@ export default {
     width: auto;
   }
 }
-
+.drawerBt{
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
 </style>

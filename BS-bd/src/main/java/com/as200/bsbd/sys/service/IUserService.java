@@ -20,4 +20,5 @@ public interface IUserService extends IService<User> {
 
     void logout(String token);
 
+    Object getUserInfoOrByUserID(Integer userID, Long pageNo, Long pageSize);
 }
