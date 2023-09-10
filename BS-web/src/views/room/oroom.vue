@@ -7,7 +7,7 @@
       <el-button @click="getRoomList" type="primary">查询</el-button>
     </el-card>
     <el-card class="oroom_body example-pagination-block">
-      <!-- Form -->
+      <!-- dialog -->
       <el-dialog :title="customerRoomTitle" :visible.sync="dialogFormVisible" @close="clearForm()" width="35rem">
         <el-form :model="customerRoomForm" :rules="rules" ref="customerRoomFormRef">
           <el-form-item label="姓名:" :label-width="formLabelWidth" prop="customerName">
@@ -94,7 +94,7 @@ export default {
       }
     }
     const validateNumber = (rule, value, callback) => {
-      if (value < 9999999999) {
+      if (value < 9999999999 || value > 100000000000) {
         callback(new Error('请输入11位数字'))
       } else {
         callback()
@@ -109,7 +109,6 @@ export default {
         customerPhone: [
           { required: true, message: '请输入电话号码', trigger: 'blur' },
           { validator: validateNumber, trigger: 'blur' },
-          { type: 'number', message: '只能为数字', trigger: 'blur' }
         ],
         customerIdNumber: [
           { required: true, message: '请输入身份证号', trigger: 'blur' },

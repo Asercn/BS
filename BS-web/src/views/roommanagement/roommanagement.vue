@@ -4,7 +4,7 @@
     <el-divider/>
     <el-card>
       <el-row class="buttonRow">
-        <!--        新增框-->
+        <!--        dialog-->
         <el-dialog @close="clearFrom" :title="roomTotal" :visible.sync="dialogFormVisible" width="30rem">
           <el-form :model="roomForm" :rules="rules" ref="roomFormref">
             <el-form-item label="房间名" :label-width="formLabelWidth" prop="roomName">

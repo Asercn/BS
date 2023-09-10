@@ -3,20 +3,27 @@
   <h3>用户管理</h3>
   <el-divider/>
   <el-card>
-    <!--        修改框-->
+    <!--        dialog-->
     <el-dialog @close="clearFrom" :title="userTotal" :visible.sync="dialogFormVisible" width="30rem">
       <el-form :model="userForm" :rules="rules" ref="userFormref">
         <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
           <el-input v-model="userForm.username" autocomplete="off" class="inputWidth"></el-input>
         </el-form-item>
         <el-form-item label="职位" :label-width="formLabelWidth" prop="role_desc">
-          <el-input v-model="userForm.role_desc" autocomplete="off" class="inputWidth"></el-input>
+          <el-select v-model="userForm.role_desc" placeholder="请选择">
+            <el-option
+              v-for="item in items"
+              :key="item.roleName"
+              :label="item.roleDesc"
+              :value="item.roleDesc">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="邮件地址" :label-width="formLabelWidth" prop="email">
           <el-input v-model="userForm.email" autocomplete="off" class="inputWidth"></el-input>
         </el-form-item>
         <el-form-item label="电话号码" :label-width="formLabelWidth" prop="phone">
-          <el-input v-model.number.trim="userForm.phone" autocomplete="off" class="inputWidth"></el-input>
+          <el-input v-model.number="userForm.phone" autocomplete="off" class="inputWidth"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -26,16 +33,11 @@
     </el-dialog>
 
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column type="index" label="#" width="180">
-      </el-table-column>
-      <el-table-column prop="username" label="用户名" >
-      </el-table-column>
-      <el-table-column prop="role_desc" label="职位">
-      </el-table-column>
-      <el-table-column prop="email" label="邮件地址">
-      </el-table-column>
-      <el-table-column prop="phone" label="电话号码">
-      </el-table-column>
+      <el-table-column type="index" label="#" width="180"></el-table-column>
+      <el-table-column prop="username" label="用户名" ></el-table-column>
+      <el-table-column prop="role_desc" label="职位"></el-table-column>
+      <el-table-column prop="email" label="邮件地址"></el-table-column>
+      <el-table-column prop="phone" label="电话号码"></el-table-column>
       <el-table-column prop="state" label="状态" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.state == 1" type="success" >启用</el-tag>
@@ -44,7 +46,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="openEditUI(scope.row)"></el-button>  <!-- 编辑按钮-->
+          <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="openEditUI(scope.row.id)"></el-button>  <!-- 编辑按钮-->
           <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="deleteRoom(scope.row)"></el-button>  <!-- 删除按钮-->
         </template>
       </el-table-column>
@@ -69,7 +71,6 @@
 import { getUserInfoOrByUserID } from '@/api/user'
 import roleApi from '@/api/role'
 export default {
-  name: "index",
   data() {
     const validateNumber = (rule, value, callback) => {
       if (value < 9999999999 || value > 100000000000) {
@@ -93,12 +94,16 @@ export default {
         ],
         phone: [
           { required: true, message: '请输入电话号码', trigger: 'blur' },
-          { validator: validateNumber, trigger: ['blur', 'change'] },
-          { type: 'number', message: '只能为数字', trigger: 'blur' }
+          { validator: validateNumber, trigger: ['blur', 'change'] }
         ]
 
       },
-      userForm: [],
+      userForm: {
+        username: null,
+        role_desc: null,
+        email: null,
+        phone: null
+      },
       userTotal: 'title',
       dialogFormVisible: false,
       total: null,
@@ -107,7 +112,7 @@ export default {
         pageSize: 10
       },
       tableData: [],
-      RoleData: []
+      items: []
     }
   },
   methods: {
@@ -123,12 +128,14 @@ export default {
       })
     },
     clearFrom() {
+      this.userForm = {}
       this.$refs.userFormref.clearValidate()
     },
-    openEditUI(row) {
+    openEditUI(id) {
       this.dialogFormVisible = true
-      this.userTotal = '用户:' + row.username
-      this.userForm = row
+      roleApi.getRoleInfoById(id).then(rep => {
+
+      })
     },
     handleSizeChange(pageSize) {
       this.searchModel.pageSize = pageSize
@@ -146,13 +153,12 @@ export default {
     },
     getRoleInfo() {
       roleApi.getRoleInfo().then(rep => {
-        this.RoleData = rep.data
+        this.items = rep.data
       })
     }
   },
   created() {
     this.getUserInfo()
-    this.getRoleInfo()
   }
 }
 </script>

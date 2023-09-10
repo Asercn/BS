@@ -6,5 +6,11 @@ export default {
       url: '/role',
       method: 'get'
     })
+  },
+  getRoleInfoById(id) {
+    return request({
+      url: `/role/${id}`,
+      method: 'get'
+    })
   }
 }
