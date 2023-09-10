@@ -16,7 +16,7 @@
           <el-input v-model="userForm.email" autocomplete="off" class="inputWidth"></el-input>
         </el-form-item>
         <el-form-item label="电话号码" :label-width="formLabelWidth" prop="phone">
-          <el-input v-model="userForm.phone" autocomplete="off" class="inputWidth"></el-input>
+          <el-input v-model.number.trim="userForm.phone" autocomplete="off" class="inputWidth"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -71,13 +71,31 @@ import roleApi from '@/api/role'
 export default {
   name: "index",
   data() {
+    const validateNumber = (rule, value, callback) => {
+      if (value < 9999999999 || value > 100000000000) {
+        callback(new Error('请输入11位数字'))
+      } else {
+        callback()
+      }
+    }
     return {
-
       formLabelWidth: '5rem',
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
+        role_desc: [
+          { required: true, message: '请选择用户职位', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { type: 'email', message: '输入正确的邮箱格式', trigger: ['blur', 'change'] }
+        ],
+        phone: [
+          { required: true, message: '请输入电话号码', trigger: 'blur' },
+          { validator: validateNumber, trigger: ['blur', 'change'] },
+          { type: 'number', message: '只能为数字', trigger: 'blur' }
+        ]
 
       },
       userForm: [],

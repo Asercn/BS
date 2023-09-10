@@ -94,7 +94,7 @@ export default {
       }
     }
     const validateNumber = (rule, value, callback) => {
-      if (value < 999999999) {
+      if (value < 9999999999) {
         callback(new Error('请输入11位数字'))
       } else {
         callback()
