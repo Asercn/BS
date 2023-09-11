@@ -31,6 +31,9 @@ public class RoleController {
     public Result<List<Role>> getRoleInfo(){
         return Result.success(roleService.list(),"查询成功");
     }
-
+    @GetMapping("/{id}")
+    public Result<?> getRoleInfoById(@PathVariable(value = "id")Integer ID){
+        return Result.success(roleService.getById(ID),"查询成功");
+    }
 
 }

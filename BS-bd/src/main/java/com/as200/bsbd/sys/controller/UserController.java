@@ -64,10 +64,5 @@ public class UserController {
         data.put("userInfo", userService.getUserInfoOrByUserID(userID,pageNo,pageSize));
         return Result.success(data, "查询成功");
     }
-    @GetMapping("/{id}")
-    public Result<?> getRoleInfoById(@PathVariable(value = "id")Integer ID){
-        Map<String, Object> data = new HashMap<>();
-        data.put("userInfo", userService.getById(ID));
-        return Result.success(data,"查询成功");
-    }
+
 }
