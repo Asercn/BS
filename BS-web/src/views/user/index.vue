@@ -48,7 +48,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="openEditUI(scope.row)"></el-button>  <!-- 编辑按钮-->
-          <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="deleteRoom(scope.row)"></el-button>  <!-- 删除按钮-->
+          <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="deleteUser(scope.row)"></el-button>  <!-- 删除按钮-->
         </template>
       </el-table-column>
       <el-table-column  label="#" align="right">
@@ -69,7 +69,8 @@
 </template>
 
 <script>
-import { getUserInfoOrByUserID } from '@/api/user'
+import { getUserInfoOrByUserID, deleteUserInfoByUserID } from '@/api/user'
+
 import roleApi from '@/api/role'
 export default {
   data() {
@@ -122,12 +123,33 @@ export default {
     saveUserForm() {
       this.$refs.userFormref.validate(valid => {
         if (valid) {
-          // 验证成功
+          // 验证成功,提交后台
           console.log('ok')
         } else {
           // 验证失败
           console.log('error')
         }
+      })
+    },
+    deleteUser(row) {
+      this.$confirm(`删除用户:${row.username}, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 删除操作
+        deleteUserInfoByUserID(row.id).then(rep => {
+          this.$message({
+            type: 'success',
+            message: rep.message
+          })
+          this.getUserInfo()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     clearFrom() {

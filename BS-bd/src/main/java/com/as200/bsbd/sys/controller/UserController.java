@@ -2,6 +2,8 @@ package com.as200.bsbd.sys.controller;
 
 import com.as200.bsbd.common.vo.Result;
 import com.as200.bsbd.sys.entity.User;
+import com.as200.bsbd.sys.service.IRoleService;
+import com.as200.bsbd.sys.service.IUserRoleService;
 import com.as200.bsbd.sys.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,8 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IUserRoleService userRoleService;
     @GetMapping("/all")
     public Result<List<User>> getAllUser(){
         List<User> list = userService.list();
@@ -63,6 +67,15 @@ public class UserController {
         data.put("total",userService.count());
         data.put("userInfo", userService.getUserInfoOrByUserID(userID,pageNo,pageSize));
         return Result.success(data, "查询成功");
+    }
+
+    @DeleteMapping("/{userID}")
+    public Result<?> deleteUserInfoByUserID(@PathVariable(value = "userID")Integer userID){
+        // 移除用户信息
+        userService.removeById(userID);
+        // 移除用户权限
+        userRoleService.removeByUserID(userID);
+        return Result.success("删除成功");
     }
 
 }

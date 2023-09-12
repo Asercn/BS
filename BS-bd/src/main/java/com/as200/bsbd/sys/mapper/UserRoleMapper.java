@@ -2,6 +2,7 @@ package com.as200.bsbd.sys.mapper;
 
 import com.as200.bsbd.sys.entity.UserRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UserRoleMapper extends BaseMapper<UserRole> {
 
+    void removeByUserID(@Param(value = "userID") Integer userID);
 }

@@ -5,6 +5,7 @@
         select role_name
         from x_user_role left join x_role on x_user_role.role_id = x_role.role_id
         where x_user_role.id = #{userId}
+        AND deleted=0
 
     </select>
     <select id="getUserInfoOrByUserID" parameterType="Integer" resultType="map">
@@ -18,6 +19,8 @@
             <if test="userID != null and userID != ''">
                 AND U.id = #{userID}
             </if>
+            AND UR.deleted = 0
+            AND U.deleted = 0
         </where>
         LIMIT #{pageNo}, #{pageSize}
     </select>

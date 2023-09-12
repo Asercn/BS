@@ -33,3 +33,9 @@ export function getUserInfoOrByUserID(searchModel) {
     }
   })
 }
+export function deleteUserInfoByUserID(userID) {
+  return request({
+    url: `/user/${userID}`,
+    method: 'delete'
+  })
+}
