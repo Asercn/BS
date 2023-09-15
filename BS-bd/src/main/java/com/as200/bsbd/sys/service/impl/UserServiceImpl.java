@@ -75,8 +75,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Object getUserInfoOrByUserID(Integer userID, Long pageNo, Long pageSize) {
+    public Object getUserInfo(Long pageNo, Long pageSize) {
         Long offset = (pageNo-1) * pageSize;
-        return this.baseMapper.getUserInfoOrByUserID(userID, offset, pageSize);
+        return this.baseMapper.getUserInfo(offset, pageSize);
+    }
+
+    @Override
+    public Map<String, Object> getUserInfoByID(Integer userID) {
+        return this.baseMapper.getUserInfoByID(userID);
     }
 }

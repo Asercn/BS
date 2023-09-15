@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -16,7 +17,8 @@ import java.util.List;
  */
 public interface UserMapper extends BaseMapper<User> {
     public List<String> getRoleNameByUserId(Integer userid);
-    public List<String> getUserInfoOrByUserID(@Param("userID") Integer userID,
-                                      @Param("pageNo") Long offset,
-                                      @Param("pageSize") Long pageSize);
+    public List<String> getUserInfo(@Param("pageNo") Long offset,
+                                    @Param("pageSize") Long pageSize);
+
+    Map<String, Object> getUserInfoByID(@Param(value = "userID") Integer userID);
 }

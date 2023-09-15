@@ -5,12 +5,14 @@ import com.as200.bsbd.sys.entity.User;
 import com.as200.bsbd.sys.service.IRoleService;
 import com.as200.bsbd.sys.service.IUserRoleService;
 import com.as200.bsbd.sys.service.IUserService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -58,14 +60,20 @@ public class UserController {
         return Result.success();
     }
 
-    // 根据传入的用户ID或者不传入用户ID获取到用户信息，以及用户权限名称
+    // 获取到用户信息,以及用户权限名称,分页
     @GetMapping
-    public Result<?> getUserInfoOrByUserID(@RequestParam(value = "pageNo")Long pageNo,
-                                            @RequestParam(value = "pageSize")Long pageSize,
-                                            @RequestParam(value = "userID", required = false)Integer userID){
+    public Result<?> getUserInfo(@RequestParam(value = "pageNo")Long pageNo,
+                                 @RequestParam(value = "pageSize")Long pageSize){
         Map<String, Object> data = new HashMap<>();
         data.put("total",userService.count());
-        data.put("userInfo", userService.getUserInfoOrByUserID(userID,pageNo,pageSize));
+        data.put("userInfo", userService.getUserInfo(pageNo,pageSize));
+        return Result.success(data, "查询成功");
+    }
+
+    // 根据用户ID获取到用户的信息
+    @GetMapping("/{userID}")
+    public Result<?> getUserInfoByID(@PathVariable(value = "userID")Integer userID){
+        Map<String, Object> data = userService.getUserInfoByID(userID);
         return Result.success(data, "查询成功");
     }
 
@@ -76,6 +84,14 @@ public class UserController {
         // 移除用户权限
         userRoleService.removeByUserID(userID);
         return Result.success("删除成功");
+    }
+
+
+    // 根据用户ID修改用户信息
+    @PutMapping
+    public Result<?> updateUser(@RequestBody User user){
+        userService.updateById(user);
+        return Result.success("修改成功");
     }
 
 }

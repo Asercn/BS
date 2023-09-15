@@ -22,15 +22,20 @@ export function logout() {
     method: 'post'
   })
 }
-export function getUserInfoOrByUserID(searchModel) {
+export function getUserInfo(searchModel) {
   return request({
     url: '/user',
     method: 'get',
     params: {
       pageNo: searchModel.pageNo,
-      pageSize: searchModel.pageSize,
-      userID: searchModel.userID
+      pageSize: searchModel.pageSize
     }
+  })
+}
+export function getUserInfoOrByUserID(id) {
+  return request({
+    url: `/user/${id}`,
+    method: 'get'
   })
 }
 export function deleteUserInfoByUserID(userID) {
@@ -39,3 +44,19 @@ export function deleteUserInfoByUserID(userID) {
     method: 'delete'
   })
 }
+export function updateUser(userForm) {
+  return request({
+    url: '/user',
+    method: 'put',
+    data: userForm
+  })
+}
+export function updateUserRole(userRoleForm) {
+  return request({
+    url: '/userRole',
+    method: 'put',
+    data: userRoleForm
+  })
+}
+
+

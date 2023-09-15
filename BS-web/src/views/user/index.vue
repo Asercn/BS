@@ -10,12 +10,12 @@
           <el-input v-model="userForm.username" autocomplete="off" class="inputWidth"></el-input>
         </el-form-item>
         <el-form-item label="职位" :label-width="formLabelWidth" prop="role_desc">
-          <el-select v-model="userForm.role_desc" placeholder="请选择">
+          <el-select v-model="userForm.role_id" placeholder="请选择">
             <el-option
               v-for="item in roleData"
               :key="item.roleName"
               :label="item.roleDesc"
-              :value="item.roleDesc">
+              :value="item.roleId">
             </el-option>
           </el-select>
         </el-form-item>
@@ -45,13 +45,11 @@
           <el-tag v-else type="danger" >禁用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="openEditUI(scope.row)"></el-button>  <!-- 编辑按钮-->
           <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="deleteUser(scope.row)"></el-button>  <!-- 删除按钮-->
         </template>
-      </el-table-column>
-      <el-table-column  label="#" align="right">
       </el-table-column>
     </el-table>
     <!--        分页-->
@@ -69,7 +67,14 @@
 </template>
 
 <script>
-import { getUserInfoOrByUserID, deleteUserInfoByUserID } from '@/api/user'
+import {
+  getUserInfoOrByUserID,
+  deleteUserInfoByUserID,
+  saveForm,
+  getUserInfo,
+  updateUser,
+  updateUserRole
+} from '@/api/user'
 
 import roleApi from '@/api/role'
 export default {
@@ -96,15 +101,17 @@ export default {
         ],
         phone: [
           { required: true, message: '请输入电话号码', trigger: 'blur' },
-          { validator: validateNumber, trigger: ['blur'] }
+          { validator: validateNumber, trigger: ['change'] }
         ]
 
       },
       userForm: {
+        id: null,
         username: null,
         role_desc: null,
         email: null,
-        phone: null
+        phone: null,
+        role_id: null
       },
       userTitle: 'title',
       dialogFormVisible: false,
@@ -114,7 +121,11 @@ export default {
         pageSize: 10
       },
       tableData: [],
-      roleData: []
+      roleData: [],
+      userRoleForm: {
+        userId: null,
+        roleId: null
+      }
     }
   },
   computed: {
@@ -124,7 +135,21 @@ export default {
       this.$refs.userFormref.validate(valid => {
         if (valid) {
           // 验证成功,提交后台
-          console.log('ok')
+          this.userRoleForm.userId = this.userForm.id  // 获取userid
+          // 2023.9.15 预期获取userRole的id --已完成
+          this.userRoleForm.roleId = this.userForm.role_id  // 获取修改后的roleID
+          updateUser(this.userForm).then(rep => {
+            updateUserRole(this.userRoleForm).then(rep => {
+              this.$message({
+                message: rep.message,
+                type: 'success'
+              })
+              // 2023年9月15日15:01:01 出现bug 修改完成后，刷新只会显示刚刚修改过的数据 --已修复
+              // 2023年9月15日16:27:39 bug:无法单独修改用户职位 --已修复
+              this.getUserInfo()
+            })
+          })
+          this.dialogFormVisible = false
         } else {
           // 验证失败
           console.log('error')
@@ -140,8 +165,8 @@ export default {
         // 删除操作
         deleteUserInfoByUserID(row.id).then(rep => {
           this.$message({
-            type: 'success',
-            message: rep.message
+            message: rep.message,
+            type: 'success'
           })
           this.getUserInfo()
         })
@@ -158,10 +183,9 @@ export default {
     },
     openEditUI(row) {
       this.dialogFormVisible = true
-      this.searchModel.userID = row.id
-      getUserInfoOrByUserID(this.searchModel).then(rep => {
-        this.userTitle = '用户:' + rep.data.userInfo[0].username
-        this.userForm = rep.data.userInfo[0]
+      getUserInfoOrByUserID(row.id).then(rep => {
+        this.userForm = rep.data
+        this.userTitle = '用户' + rep.data.username
       })
     },
     handleSizeChange(pageSize) {
@@ -173,7 +197,7 @@ export default {
       this.getUserInfo()
     },
     getUserInfo() {
-      getUserInfoOrByUserID(this.searchModel).then(rep => {
+      getUserInfo(this.searchModel).then(rep => {
         this.tableData = rep.data.userInfo
         this.total = rep.data.total
       })

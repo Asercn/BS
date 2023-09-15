@@ -8,20 +8,28 @@
         AND deleted=0
 
     </select>
-    <select id="getUserInfoOrByUserID" parameterType="Integer" resultType="map">
+    <select id="getUserInfo" parameterType="Integer" resultType="map">
         select
-            U.*, R.role_desc
+            U.*, R.role_desc, R.role_id
         from
             x_user_role AS UR
             LEFT JOIN x_role AS R ON  UR.role_id = R.role_id
             LEFT JOIN x_user AS U ON UR.user_id = U.id
         <where>
-            <if test="userID != null and userID != ''">
-                AND U.id = #{userID}
-            </if>
-            AND UR.deleted = 0
             AND U.deleted = 0
         </where>
         LIMIT #{pageNo}, #{pageSize}
+    </select>
+    <select id="getUserInfoByID" parameterType="Integer" resultType="map">
+        select
+        U.*, R.role_desc, R.role_id
+        from
+        x_user_role AS UR
+        LEFT JOIN x_role AS R ON  UR.role_id = R.role_id
+        LEFT JOIN x_user AS U ON UR.user_id = U.id
+        <where>
+            AND U.deleted = 0
+            AND U.id = #{userID}
+        </where>
     </select>
 </mapper>

@@ -15,4 +15,5 @@ import org.apache.ibatis.annotations.Param;
 public interface UserRoleMapper extends BaseMapper<UserRole> {
 
     void removeByUserID(@Param(value = "userID") Integer userID);
+
 }

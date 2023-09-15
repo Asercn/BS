@@ -15,4 +15,5 @@ public interface IUserRoleService extends IService<UserRole> {
 
     // 根据用户ID移除用户权限
     void removeByUserID(Integer userID);
+
 }
