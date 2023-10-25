@@ -3,6 +3,10 @@
     <h3>房间管理</h3>
     <el-divider/>
     <el-card>
+      <el-input v-model="searchModel.roomname" placeholder="房间号" style="width: 180px; margin-right: 0.5rem" clearable></el-input>
+      <el-button @click="getRoomList" type="primary">查询</el-button>
+    </el-card>
+    <el-card>
       <el-row class="buttonRow">
         <!--        dialog-->
         <el-dialog @close="clearFrom" :title="roomTotal" :visible.sync="dialogFormVisible" width="30rem">
@@ -85,6 +89,12 @@ export default {
     }
   },
   methods: {
+    getRoomList() {
+      console.log(this.searchModel.roomname)
+      roomApi.getRoom(this.searchModel).then(rep => {
+        this.roomData = rep.data.rows
+      })
+    },
     deleteRoom(room) {
       this.$confirm(`删除房间:${room.roomName}, 是否继续?`, '提示', {
         confirmButtonText: '确定',

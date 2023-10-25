@@ -65,4 +65,14 @@ public class CustomerRoomController {
         customerRoomService.save(customerRoom);
         return Result.success("订单成功");
     }
+
+
+    @PutMapping
+    public Result<?> outRoom(@RequestBody CustomerRoom customerRoom){
+        LocalDate currentDate = LocalDate.now();
+        System.out.println(currentDate);
+        customerRoom.setEndDate(currentDate);
+        customerRoomService.updateById(customerRoom);
+        return Result.success("退房成功");
+    }
 }

@@ -14,7 +14,6 @@ export default {
       }
     })
   },
-
   addCustomer(customer) {
     return request({
       method: 'post',

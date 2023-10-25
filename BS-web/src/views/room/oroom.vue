@@ -3,7 +3,7 @@
     <h3>房间状态</h3>
     <el-divider/>
     <el-card>
-      <el-input v-model="searchModel.roomname" placeholder="房间号" style="width: 180px; margin-right: 0.5rem" clearable></el-input>
+      <el-input v-model="searchModel.roomname" placeholder="房间号" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
       <el-button @click="getRoomList" type="primary">查询</el-button>
     </el-card>
     <el-card class="oroom_body example-pagination-block">
@@ -207,6 +207,7 @@ export default {
                 this.$alert(rep2.message, '提示', {
                   confirmButtonText: '确定'
                 })
+                this.dialogFormVisible = false
               })
             } else {
               console.log('顾客信息添加失败')

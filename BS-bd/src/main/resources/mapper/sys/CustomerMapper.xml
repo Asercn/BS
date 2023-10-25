@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.as200.bsbd.sys.mapper.CustomerMapper">
     <select id="getRoomNamebyCustomer" resultType="Map">
-        SELECT a.`name`, a.phone, a.id_number, c.room_name, b.start_date, b.end_date, c.room_price
+        SELECT b.id, a.`name`, a.phone, a.id_number, c.room_name, b.start_date, b.end_date, c.room_price, (b.end_date > NOW() AND NOW() > b.start_date )'room_state'
         FROM x_customer_room AS b
         LEFT JOIN x_customer AS a ON b.customer_id = a.id
         LEFT JOIN x_room AS c ON b.room_id = c.room_id

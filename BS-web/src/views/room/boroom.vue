@@ -4,12 +4,23 @@
   <el-divider></el-divider>
 <!--  数据-->
   <el-card>
-    <el-input v-model="searchModel.roomName" placeholder="房间号" style="width: 180px; margin-right: 0.5rem" clearable></el-input>
-    <el-input v-model="searchModel.customerName" placeholder="姓名" style="width: 180px; margin-right: 0.5rem" clearable></el-input>
-    <el-input v-model="searchModel.customerPhone" placeholder="电话" style="width: 180px; margin-right: 0.5rem" clearable></el-input>
+    <el-input v-model="searchModel.roomName" placeholder="房间号" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
+    <el-input v-model="searchModel.customerName" placeholder="姓名" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
+    <el-input v-model="searchModel.customerPhone" placeholder="电话" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
     <el-button @click="getCustomer" type="primary">查询</el-button>
   </el-card>
   <el-card>
+    <!--    退房对话框-->
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <span>确定退房嘛？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="outRoom()">确 定</el-button>
+      </span>
+    </el-dialog>
     <el-table :data="customerInfo">
       <el-table-column type="index" label="#" width="80" align="left"></el-table-column>
       <el-table-column prop="name" label="姓名" width="150"></el-table-column>
@@ -19,6 +30,12 @@
       <el-table-column prop="start_date" label="入住时间"></el-table-column>
       <el-table-column prop="end_date" label="退房时间" ></el-table-column>
       <el-table-column prop="room_price" label="支付金额" ></el-table-column>
+      <el-table-column prop="room_state" label="退房操作" align="center">
+        <template slot-scope="scope">
+          <el-button type="danger" v-if="scope.row.room_state==1" @click="openOutRoomDialog(scope.row)">退房</el-button>
+          <el-button type="info" plain disabled v-if="scope.row.room_state==0">退房</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="#" align="right"></el-table-column>
     </el-table>
 <!--    分页栏-->
@@ -37,10 +54,13 @@
 
 <script>
 import customerApi from '@/api/customer'
+import customerroomApi from "@/api/customerroom"
+
 export default {
   data() {
     return {
       total: 3,
+      dialogVisible: false,
       customerInfo: [],
       searchModel: {
         pageNo: 1,
@@ -48,7 +68,8 @@ export default {
         roomName: null,
         customerName: null,
         customerPhone: null
-      }
+      },
+      customForm: {}
     }
   },
   methods: {
@@ -64,6 +85,26 @@ export default {
       customerApi.getcustomer(this.searchModel).then(rep => {
         this.customerInfo = rep.data.customerInfo
         this.total = rep.data.total
+      })
+    },
+    openOutRoomDialog(row) {
+      this.dialogVisible = true
+      this.customForm.id = row.id
+    },
+    outRoom() {
+      customerroomApi.outRoom(this.customForm).then(rep => {
+        console.log('退房成功')
+        this.$alert(rep.message, '提示', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'success',
+              message: `提示: ${rep.message}`
+            })
+          }
+        })
+        this.dialogVisible = false
+        this.getCustomer()
       })
     }
   },

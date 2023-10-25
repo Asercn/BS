@@ -13,5 +13,12 @@ export default {
       method: 'post',
       data: customerRoom
     })
+  },
+  outRoom(customerForm) {
+    return request({
+      url: '/customerRoom',
+      method: 'put',
+      data: customerForm
+    })
   }
 }
