@@ -52,7 +52,9 @@
           <el-button type="primary" @click="saveCustomerRoomForm()">确 定</el-button>
         </div>
       </el-dialog>
-      <el-button class="r el-icon-s-home" v-for="(v,i) in orooms" :class="setRoomState(v.roomId) " :key="i" @click="openRoomUI(v)">{{ v.roomName }}</el-button>
+      <el-button class="r el-icon-s-home" v-for="(v,i) in orooms" :class="setRoomState(v.roomId) " :key="i" @click="openRoomUI(v)" v-if="">
+        {{ v.roomName }}
+      </el-button>
       <!--        分页-->
       <el-pagination
         @size-change="handleSizeChange"

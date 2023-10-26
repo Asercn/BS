@@ -86,17 +86,17 @@ export const constantRoutes = [
     }]
   },
   // 一般后台管理不需要用户管理这个功能
-  // {
-  //   path: '/user',
-  //   component: Layout,
-  //   redirect: '/user',
-  //   children: [{
-  //     path: 'user',
-  //     name: 'Name',
-  //     component: () => import('@/views/user/index'),
-  //     meta: { title: '用户管理', icon: 'el-icon-user-solid' }
-  //   }]
-  // },
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user',
+    children: [{
+      path: 'user',
+      name: 'Name',
+      component: () => import('@/views/user/index'),
+      meta: { title: '用户管理', icon: 'el-icon-user-solid' }
+    }]
+  },
 
   // {
   //   path: '/example',

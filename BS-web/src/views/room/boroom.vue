@@ -55,7 +55,6 @@
 <script>
 import customerApi from '@/api/customer'
 import customerroomApi from "@/api/customerroom"
-
 export default {
   data() {
     return {
@@ -85,6 +84,12 @@ export default {
       customerApi.getcustomer(this.searchModel).then(rep => {
         this.customerInfo = rep.data.customerInfo
         this.total = rep.data.total
+
+        this.customerInfo.map(data => {
+          // console.log(new Date(data.end_date).toLocaleDateString())
+          data.end_date = new Date(data.end_date).toLocaleDateString('zh-CN')
+          data.start_date = new Date(data.start_date).toLocaleDateString('zh-CN')
+        })
       })
     },
     openOutRoomDialog(row) {
