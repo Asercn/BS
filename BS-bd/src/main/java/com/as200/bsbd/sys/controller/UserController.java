@@ -24,7 +24,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/user")
-@CrossOrigin // 跨域处理
+//@CrossOrigin // 跨域处理
 public class UserController {
     @Autowired
     private IUserService userService;

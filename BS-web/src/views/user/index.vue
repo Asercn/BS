@@ -202,15 +202,15 @@ export default {
         this.total = rep.data.total
       })
     },
-    getRoleInfo() {
-      roleApi.getRoleInfo().then(rep => {
+    getRole() {
+      roleApi.getRole().then(rep => {
         this.roleData = rep.data
       })
     }
   },
   created() {
     this.getUserInfo()
-    this.getRoleInfo()
+    this.getRole()
   }
 }
 </script>

@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/customer")
-@CrossOrigin
+//@CrossOrigin
 public class CustomerController {
     @Autowired
     private ICustomerService customerService;

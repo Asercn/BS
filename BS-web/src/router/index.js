@@ -85,7 +85,6 @@ export const constantRoutes = [
       meta: { title: '房间管理', icon: 'el-icon-s-home' }
     }]
   },
-  // 一般后台管理不需要用户管理这个功能
   {
     path: '/user',
     component: Layout,
@@ -95,6 +94,17 @@ export const constantRoutes = [
       name: 'Name',
       component: () => import('@/views/user/index'),
       meta: { title: '用户管理', icon: 'el-icon-user-solid' }
+    }]
+  },
+  {
+    path: '/role',
+    component: Layout,
+    redirect: '/role',
+    children: [{
+      path: 'role',
+      name: 'Role',
+      component: () => import('@/views/role/index'),
+      meta: { title: '角色管理', icon: 'el-icon-user-solid' }
     }]
   },
 
