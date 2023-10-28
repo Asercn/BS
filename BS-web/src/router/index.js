@@ -56,7 +56,7 @@ export const constantRoutes = [
   },
   {
     component: Layout,
-    redirct: '/',
+    redirct: '/room/user',
     path: '/room',
     name: 'room',
     meta: { title: '客房状态', icon: 'tree' },

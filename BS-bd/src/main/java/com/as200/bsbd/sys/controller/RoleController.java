@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/role")
-//@CrossOrigin
+@CrossOrigin
 public class RoleController {
     @Autowired
     private IRoleService roleService;

@@ -2,6 +2,7 @@ package com.as200.bsbd.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -15,6 +16,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Configuration
 @EnableOpenApi
 @EnableWebMvc
+//@CrossOrigin
 public class MySwaggerConfig {
     @Bean
     public Docket api() {
@@ -28,7 +30,7 @@ public class MySwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("宾馆管理系统文档")
+                .title("基于VUE的宾馆管理系统文档")
                 .description("毕设")
                 .version("1.0")
                 .contact(new Contact("as200", "https://github.com/Asercn","534304548@qq.com"))

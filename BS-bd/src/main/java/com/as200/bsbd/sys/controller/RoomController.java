@@ -29,7 +29,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/room")
-//@CrossOrigin  // 跨域
+@CrossOrigin  // 跨域
 public class RoomController {
     @Autowired
     private IRoomService roomService;

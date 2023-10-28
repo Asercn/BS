@@ -12,10 +12,13 @@
       <el-dialog @close="clearFrom" :title="RoleTitle" :visible.sync="dialogFormVisible" width="30rem">
         <el-form :model="roleForm" :rules="rules" ref="roleFormref">
           <el-form-item label="角色名" :label-width="formLabelWidth" prop="roleName">
-            <el-input v-model="roleForm.roleName" autocomplete="off" class="inputWidth"></el-input>
+            <el-input v-model="roleForm.roleName" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="角色描述" :label-width="formLabelWidth" prop="roleDesc">
+          <el-form-item label="角色描述" :label-width="formLabelWidth">
             <el-input v-model="roleForm.roleDesc" autocomplete="off" class="inputWidth"></el-input>
+          </el-form-item>
+          <el-form-item label="权限设置" :label-width="formLabelWidth" prop="menuIdList">
+            <el-tree :data="menuList" :props="menuProps" show-checkbox></el-tree>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -52,10 +55,16 @@
 
 <script>
 import RoleApi from '@/api/role'
+import MenuApi from '@/api/menu'
 
 export default {
   data() {
     return {
+      menuList: [],
+      menuProps: {
+        children: 'children',
+        label: 'title'
+      },
       total: null,
       searchModel: {
         pageNo: 1,
@@ -74,6 +83,11 @@ export default {
     }
   },
   methods: {
+    getAllMenu() {
+      MenuApi.getAllMenu().then(rep => {
+        this.menuList = rep.data
+      })
+    },
     openEditUI(id) {
       if (id == null) {
         this.RoleTitle = '新增角色'
@@ -148,6 +162,7 @@ export default {
   },
   created() {
     this.getRoleList()
+    this.getAllMenu()
   }
 }
 </script>

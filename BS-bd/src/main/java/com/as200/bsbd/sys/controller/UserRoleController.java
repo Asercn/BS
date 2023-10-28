@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/userRole")
-//@CrossOrigin
+@CrossOrigin
 public class UserRoleController {
 
     @Autowired

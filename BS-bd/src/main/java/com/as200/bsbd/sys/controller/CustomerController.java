@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -31,18 +32,20 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/customer")
-//@CrossOrigin
+@CrossOrigin
 public class CustomerController {
     @Autowired
     private ICustomerService customerService;
 
 
     @GetMapping
+    @ApiOperation("获取所有用户信息")
     public Result<?> getCustomer(){
         List<Customer> customer = customerService.list();
         return Result.success(customer, "查询成功");
     }
     @GetMapping("/list")
+    @ApiOperation("分页获取用户信息，可以根据用户姓名，手机号，房间名进行查询")
     public Result<Map<String, Object>> custormerRoomList(@RequestParam(value = "pageNo") Long pageNo,
                                                          @RequestParam(value = "pageSize") Long pageSize,
                                                          @RequestParam(value = "customerName", required = false)String customerName,
@@ -55,6 +58,7 @@ public class CustomerController {
     }
 
     @PostMapping
+    @ApiOperation("添加用户")
     public Result<?> addCustomer(@RequestBody Customer customer){
         customerService.save(customer);
         Map<String, Object> data = new HashMap<>();
