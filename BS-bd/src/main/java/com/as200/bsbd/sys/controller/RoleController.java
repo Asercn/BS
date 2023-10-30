@@ -55,12 +55,13 @@ public class RoleController {
     }
     @GetMapping("/{id}")
     public Result<?> getRoleInfoById(@PathVariable(value = "id")Integer ID){
-        return Result.success(roleService.getById(ID),"查询成功");
+        Role role = roleService.getRoleById(ID);
+        return Result.success(role,"查询成功");
     }
 
     @PostMapping
     public Result<Role> addRole(@RequestBody Role role){
-        roleService.save(role);
+        roleService.addRole(role);
         return Result.success("添加成功");
     }
 

@@ -18,7 +18,7 @@
             <el-input v-model="roleForm.roleDesc" autocomplete="off" class="inputWidth"></el-input>
           </el-form-item>
           <el-form-item label="权限设置" :label-width="formLabelWidth" prop="menuIdList">
-            <el-tree :data="menuList" :props="menuProps" show-checkbox></el-tree>
+            <el-tree :data="menuList" :props="menuProps" show-checkbox node-key="menuId" ref="menuRef"></el-tree>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -95,11 +95,10 @@ export default {
         this.RoleTitle = '修改角色'
         RoleApi.getRoleInfoById(id).then(rep => {
           this.roleForm = rep.data
+          this.$refs.menuRef.setCheckedKeys(rep.data.menuIdList)
         })
       }
       this.dialogFormVisible = true
-    },
-    deleteUser() {
     },
     getRoleList() {
       RoleApi.getRoleInfo(this.searchModel).then(rep => {
@@ -118,10 +117,15 @@ export default {
     clearFrom() {
       this.roleForm = {}
       this.$refs.roleFormref.clearValidate()
+      this.$refs.menuRef.setCheckedKeys([])
     },
     saveRoleForm() {  // 表单验证
       this.$refs.roleFormref.validate(vaild => {
         if (vaild) {  // 验证通过
+          let checkedKeys = this.$refs.menuRef.getCheckedKeys()
+          let halfKeys = this.$refs.menuRef.getHalfCheckedKeys()
+          this.roleForm.menuIdList = checkedKeys.concat(halfKeys)
+          // console.log(this.roleForm.menuIdList)
           // 提交后台
           RoleApi.saveRole(this.roleForm).then(rep => {
             // 提交成功提示
