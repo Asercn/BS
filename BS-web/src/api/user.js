@@ -58,5 +58,3 @@ export function updateUserRole(userRoleForm) {
     data: userRoleForm
   })
 }
-
-

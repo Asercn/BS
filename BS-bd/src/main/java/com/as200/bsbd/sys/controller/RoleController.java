@@ -5,6 +5,7 @@ import com.as200.bsbd.sys.entity.Role;
 import com.as200.bsbd.sys.service.IRoleService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ public class RoleController {
     private IRoleService roleService;
 
 
+    @ApiOperation("获取所有角色信息")
     @GetMapping("/all")
     public Result<List<Role>> getRole(){
         List<Role> data = roleService.list();
@@ -67,12 +69,15 @@ public class RoleController {
 
     @PutMapping
     public Result<Role> updateRole(@RequestBody Role role){
-        roleService.updateById(role);
+//        roleService.updateById(role);
+        roleService.updateRole(role);
         return Result.success("修改成功");
     }
     @DeleteMapping
     public Result<Role> deleteRole(@RequestBody Role role){
-        roleService.removeById(role);
+//        roleService.removeById(role);
+        roleService.deleteRole(role);
+
         return Result.success("删除成功");
     }
 }

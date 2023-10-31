@@ -4,3 +4,5 @@
 JAVA版本:Dragonwell 17
 处理器:AMD Ryzen 7 3700X 8-Core Processor 3.6GHz
 RAM:16GB
+npm版本: v8.1.0
+Node.js版本: v16.12.0

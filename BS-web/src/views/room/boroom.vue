@@ -23,6 +23,7 @@
     </el-dialog>
     <el-table :data="customerInfo">
       <el-table-column type="index" label="#" width="80" align="left"></el-table-column>
+      <el-table-column prop="id" label="订单号"></el-table-column>
       <el-table-column prop="name" label="姓名" width="150"></el-table-column>
       <el-table-column prop="phone" label="手机号" width="180"></el-table-column>
       <el-table-column prop="id_number" label="身份证号" width="200"></el-table-column>
