@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-//@Configuration
+@Configuration
 public class MyInterceptorConfig implements WebMvcConfigurer {
     @Autowired
     private JwtValidateInterceptor jwtValidateInterceptor;
@@ -16,15 +16,28 @@ public class MyInterceptorConfig implements WebMvcConfigurer {
         InterceptorRegistration registration = registry.addInterceptor(jwtValidateInterceptor);
         registration.addPathPatterns("/**")
                 .excludePathPatterns(
+                        "/**",
                         "/user/login",
                         "/user/info",
                         "/user/logout",
+                        "/user/*",
+                        "/user",
+                        "/room",
+                        "/room/*",
+                        "/roommanagement/*",
+                        "/role",
+                        "/role/*",
+                        "/customerRoom/last/*",
+                        "/customer",
+                        "/customer/*",
+                        "/error",
+                        "/menu",
+                        "/menu/*",
+                        "/userRole",
+                        "/userRole/*",
                         "/swagger-ui/**",
                         "/swagger-resources/**",
-                        "/error",
-                        "/v3/**",
-                        "/room/**",
-                        "/user/**"
+                        "/v3/**"
                 );
 
     }

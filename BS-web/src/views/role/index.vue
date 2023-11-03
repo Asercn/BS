@@ -101,6 +101,7 @@ export default {
       this.dialogFormVisible = true
     },
     getRoleList() {
+      this.searchModel.pageNo = 1
       RoleApi.getRoleInfo(this.searchModel).then(rep => {
         this.RoleList = rep.data.roleInfo
         this.total = rep.data.total

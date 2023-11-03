@@ -18,7 +18,8 @@ import java.util.Map;
 public interface UserMapper extends BaseMapper<User> {
     public List<String> getRoleNameByUserId(Integer userid);
     public List<String> getUserInfo(@Param("pageNo") Long offset,
-                                    @Param("pageSize") Long pageSize);
+                                    @Param("pageSize") Long pageSize,
+                                    @Param("username") String userName);
 
     Map<String, Object> getUserInfoByID(@Param(value = "userID") Integer userID);
 }

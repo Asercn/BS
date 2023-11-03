@@ -267,6 +267,7 @@ export default {
       this.getRoomList()
     },
     getRoomList() {
+      this.searchModel.pageNo = 1
       roomApi.getRoom(this.searchModel).then(rep => {
         this.orooms = rep.data.rows
         this.total = rep.data.total

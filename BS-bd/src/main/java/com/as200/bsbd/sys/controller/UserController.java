@@ -6,7 +6,9 @@ import com.as200.bsbd.sys.service.IRoleService;
 import com.as200.bsbd.sys.service.IUserRoleService;
 import com.as200.bsbd.sys.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -61,12 +63,16 @@ public class UserController {
     }
 
     // 获取到用户信息,以及用户权限名称,分页
+    @ApiOperation("获取到用户信息,以及用户权限名称,分页")
     @GetMapping
     public Result<?> getUserInfo(@RequestParam(value = "pageNo")Long pageNo,
-                                 @RequestParam(value = "pageSize")Long pageSize){
+                                 @RequestParam(value = "pageSize")Long pageSize,
+                                 @RequestParam(value = "username", required = false)String userName){
         Map<String, Object> data = new HashMap<>();
-        data.put("total",userService.count());
-        data.put("userInfo", userService.getUserInfo(pageNo,pageSize));
+        LambdaQueryWrapper<User> warpper = new LambdaQueryWrapper<>();
+        warpper.eq(StringUtils.hasLength(userName), User::getUsername, userName);
+        data.put("total",userService.count(warpper));
+        data.put("userInfo", userService.getUserInfo(pageNo, pageSize, userName));
         return Result.success(data, "查询成功");
     }
 

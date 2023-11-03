@@ -90,9 +90,11 @@ export default {
   },
   methods: {
     getRoomList() {
+      this.searchModel.pageNo = 1
       console.log(this.searchModel.roomname)
       roomApi.getRoom(this.searchModel).then(rep => {
         this.roomData = rep.data.rows
+        this.total = rep.data.total
       })
     },
     deleteRoom(room) {

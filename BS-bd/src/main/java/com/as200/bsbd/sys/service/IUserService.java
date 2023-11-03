@@ -20,7 +20,7 @@ public interface IUserService extends IService<User> {
 
     void logout(String token);
 
-    Object getUserInfo(Long pageNo, Long pageSize);
+    Object getUserInfo(Long pageNo, Long pageSize, String userName);
 
     Map<String, Object> getUserInfoByID(Integer userID);
 }

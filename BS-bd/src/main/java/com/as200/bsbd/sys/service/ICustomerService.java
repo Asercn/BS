@@ -13,7 +13,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICustomerService extends IService<Customer> {
 
-    Integer getTotal();
 
     Object getRoomName(String roomName, String customerName, String customerPhone, Long pageNo, Long pageSize);
+
+    Object getCustomerRoomTotal(String customerName, String customerPhone, String roomName);
 }

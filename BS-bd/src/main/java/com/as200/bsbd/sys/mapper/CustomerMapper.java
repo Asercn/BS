@@ -18,7 +18,9 @@ import java.util.Map;
 public interface CustomerMapper extends BaseMapper<Customer> {
 
 
-    Integer getTotalbyCustomerRoom();
+    Integer getCustomerRoomTotal(@Param("customerName") String customerName,
+                                 @Param("customerPhone") String customerPhone,
+                                 @Param("roomName") String roomName);
 
     List<Map<String ,String>> getRoomNamebyCustomer(@Param("roomName") String roomName,
                                                     @Param("customerName") String customerName,

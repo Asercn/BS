@@ -3,6 +3,10 @@
   <h3>用户管理</h3>
   <el-divider/>
   <el-card>
+    <el-input v-model="searchModel.username" placeholder="用户名" style="width: 180px; margin-right: 0.5rem" clearable></el-input>
+    <el-button @click="getUserInfo" type="primary">查询</el-button>
+  </el-card>
+  <el-card>
     <!--        dialog-->
     <el-dialog @close="clearFrom" :title="userTitle" :visible.sync="dialogFormVisible" width="30rem">
       <el-form :model="userForm" :rules="rules" ref="userFormref">
@@ -197,6 +201,7 @@ export default {
       this.getUserInfo()
     },
     getUserInfo() {
+      this.searchModel.pageNo = 1
       getUserInfo(this.searchModel).then(rep => {
         this.tableData = rep.data.userInfo
         this.total = rep.data.total

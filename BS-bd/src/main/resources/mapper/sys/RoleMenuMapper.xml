@@ -11,7 +11,7 @@
             and
             a.menu_id = b.menu_id
             and
-            b.is_lear = 'Y'
+            b.is_leaf = 'Y'
             and
             a.role_id = #{roleId}
         </where>

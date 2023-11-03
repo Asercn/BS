@@ -2,8 +2,10 @@ package com.as200.bsbd.sys.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.as200.bsbd.common.util.JwtUtil;
+import com.as200.bsbd.sys.entity.Menu;
 import com.as200.bsbd.sys.entity.User;
 import com.as200.bsbd.sys.mapper.UserMapper;
+import com.as200.bsbd.sys.service.IMenuService;
 import com.as200.bsbd.sys.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -31,6 +33,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private RedisTemplate redisTemplate;
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private IMenuService iMenuService;
+
     @Override
     public Map<String, Object> login(User user) {
 //        查询
@@ -80,6 +86,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             List<String> roles = this.baseMapper.getRoleNameByUserId(loginUser.getId());
             data.put("role", roles);
 
+            // 权限列表
+            List<Menu> menuList = iMenuService.getMenuListByUserId(loginUser.getId());
+            data.put("menuList", menuList);
+
             return data;
         }
         return null;
@@ -92,9 +102,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Object getUserInfo(Long pageNo, Long pageSize) {
+    public Object getUserInfo(Long pageNo, Long pageSize, String userName) {
         Long offset = (pageNo-1) * pageSize;
-        return this.baseMapper.getUserInfo(offset, pageSize);
+        return this.baseMapper.getUserInfo(offset, pageSize, userName);
     }
 
     @Override

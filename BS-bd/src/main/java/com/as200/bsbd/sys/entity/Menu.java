@@ -28,14 +28,14 @@ public class Menu implements Serializable {
 
     @TableId(value = "menu_id", type = IdType.AUTO)
     private Integer menuId;
-    private String compent;
+    private String component;
     private String path;
     private String redirect;
     private String name;
     private String title;
     private String icon;
     private Integer parentId;
-    private String isLear;
+    private String isLeaf;
     private Integer hidden;
 
     @TableField(exist = false)

@@ -51,169 +51,74 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard', affix: true }
     }]
   },
-  {
-    component: Layout,
-    redirct: '/room/user',
-    path: '/room',
-    name: 'room',
-    meta: { title: '客房状态', icon: 'tree' },
-    children: [
-      {
-        path: 'boroom',
-        name: 'Boroom',
-        component: () => import('@/views/room/boroom'),
-        meta: { title: '开房记录', icon: 'el-icon-s-custom' }
-      },
-      {
-        path: 'oroom',
-        name: 'Oroom',
-        component: () => import('@/views/room/oroom'),
-        meta: { title: '房间状态', icon: 'el-icon-house' }
-      }]
-  },
-  {
-    path: '/roommanagement',
-    component: Layout,
-    redirect: '/roommanagement',
-    children: [{
-      path: 'roommanagement',
-      name: 'Roommanagement',
-      component: () => import('@/views/roommanagement/roommanagement'),
-      meta: { title: '房间管理', icon: 'el-icon-s-home' }
-    }]
-  },
-  {
-    path: '/user',
-    component: Layout,
-    redirect: '/user',
-    children: [{
-      path: 'user',
-      name: 'Name',
-      component: () => import('@/views/user/index'),
-      meta: { title: '用户管理', icon: 'el-icon-user-solid' }
-    }]
-  },
-  {
-    path: '/role',
-    component: Layout,
-    redirect: '/role',
-    children: [{
-      path: 'role',
-      name: 'Role',
-      component: () => import('@/views/role/index'),
-      meta: { title: '角色管理', icon: 'el-icon-s-custom' }
-    }]
-  },
-
   // {
-  //   path: '/example',
+  //   path: '/user',
   //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example',
-  //   meta: { title: 'Example', icon: 'el-icon-s-help' },
+  //   children: [{
+  //     path: '',
+  //     component: () => import('@/views/user/index'),
+  //     meta: { title: '测试', icon: 'dashboard' }
+  //   }]
+  // }
+  // {
+  //   path: '/room',
+  //   component: Layout,
+  //   redirect: '/room/boroom',
+  //   name: 'room',
+  //   meta: { title: '客房状态', icon: 'tree' },
   //   children: [
   //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //       component: () => import('@/views/table/index'),
-  //       meta: { title: 'Table', icon: 'table' }
+  //       path: 'boroom',
+  //       name: 'boroom',
+  //       component: () => import('@/views/room/boroom'),
+  //       meta: { title: '开房记录', icon: 'el-icon-s-custom' }
   //     },
   //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //       component: () => import('@/views/tree/index'),
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
+  //       path: 'oroom',
+  //       name: 'oroom',
+  //       component: () => import('@/views/room/oroom'),
+  //       meta: { title: '房间状态', icon: 'el-icon-house' }
+  //     }]
+  // },
+  // {
+  //   path: '/roommanagement',
+  //   component: Layout,
+  //   redirect: '/roommanagement',
+  //   children: [{
+  //     path: '',
+  //     name: 'roommanagement',
+  //     component: () => import('@/views/roommanagement/roommanagement'),
+  //     meta: { title: '房间管理', icon: 'el-icon-s-home' }
+  //   }]
+  // },
+  // {
+  //   path: '/user',
+  //   component: Layout,
+  //   redirect: '/user',
+  //   children: [{
+  //     path: '',
+  //     name: 'name',
+  //     component: () => import('@/views/user/index'),
+  //     meta: { title: '用户管理', icon: 'el-icon-user-solid' }
+  //   }]
+  // },
+  // {
+  //   path: '/role',
+  //   component: Layout,
+  //   redirect: '/role',
+  //   children: [{
+  //     path: '',
+  //     name: 'role',
+  //     component: () => import('@/views/role/index'),
+  //     meta: { title: '角色管理', icon: 'el-icon-s-custom' }
+  //   }]
   // },
   //
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Form',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: 'Form', icon: 'form' }
-  //     }
-  //   ]
-  // },
-  //
-  // {
-  //   path: '/nested',
-  //   component: Layout,
-  //   redirect: '/nested/menu1',
-  //   name: 'Nested',
-  //   meta: {
-  //     title: 'Nested',
-  //     icon: 'nested'
-  //   },
-  //   children: [
-  //     {
-  //       path: 'menu1',
-  //       component: () => import('@/views/nested/menu1/index'), // Parent router-view
-  //       name: 'Menu1',
-  //       meta: { title: 'Menu1' },
-  //       children: [
-  //         {
-  //           path: 'menu1-1',
-  //           component: () => import('@/views/nested/menu1/menu1-1'),
-  //           name: 'Menu1-1',
-  //           meta: { title: 'Menu1-1' }
-  //         },
-  //         {
-  //           path: 'menu1-2',
-  //           component: () => import('@/views/nested/menu1/menu1-2'),
-  //           name: 'Menu1-2',
-  //           meta: { title: 'Menu1-2' },
-  //           children: [
-  //             {
-  //               path: 'menu1-2-1',
-  //               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-  //               name: 'Menu1-2-1',
-  //               meta: { title: 'Menu1-2-1' }
-  //             },
-  //             {
-  //               path: 'menu1-2-2',
-  //               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-  //               name: 'Menu1-2-2',
-  //               meta: { title: 'Menu1-2-2' }
-  //             }
-  //           ]
-  //         },
-  //         {
-  //           path: 'menu1-3',
-  //           component: () => import('@/views/nested/menu1/menu1-3'),
-  //           name: 'Menu1-3',
-  //           meta: { title: 'Menu1-3' }
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       path: 'menu2',
-  //       component: () => import('@/views/nested/menu2/index'),
-  //       meta: { title: 'menu2' }
-  //     }
-  //   ]
-  // },
-  //
-  // {
-  //   path: 'external-link',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-  //       meta: { title: 'External Link', icon: 'link' }
-  //     }
-  //   ]
-  // },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // // 404 page must be placed at the end !!!
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

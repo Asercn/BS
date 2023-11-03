@@ -20,8 +20,25 @@
         ORDER BY b.end_date desc
         LIMIT #{offset},#{pageSize}
     </select>
-    <select id="getTotalbyCustomerRoom" resultType="Integer">
-        SELECT COUNT(*)
-        FROM x_customer_room
+    <select id="getCustomerRoomTotal" resultType="Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            x_customer_room AS CR,
+            x_customer AS C,
+            x_room AS R
+        <where>
+            AND CR.customer_id = C.id
+            AND CR.room_id = R.room_id
+            <if test="roomName != null and roomName != '' ">
+                AND R.`room_name` = #{roomName}
+            </if>
+            <if test="customerPhone != null and customerPhone != ''">
+                AND C.phone = #{customerPhone}
+            </if>
+            <if test="customerName != null and customerName != ''">
+                AND C.`name` = #{customerName}
+            </if>
+        </where>
     </select>
 </mapper>

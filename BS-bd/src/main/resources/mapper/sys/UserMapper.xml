@@ -8,7 +8,7 @@
         AND deleted=0
 
     </select>
-    <select id="getUserInfo" parameterType="Integer" resultType="map">
+    <select id="getUserInfo" resultType="map">
         select
             U.*, R.role_desc, R.role_id
         from
@@ -17,6 +17,9 @@
             LEFT JOIN x_user AS U ON UR.user_id = U.id
         <where>
             AND U.deleted = 0
+            <if test="username != null and username != ''">
+                AND U.username = #{username}
+            </if>
         </where>
         LIMIT #{pageNo}, #{pageSize}
     </select>

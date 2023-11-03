@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.as200.bsbd.sys.mapper.MenuMapper">
+    <select id="getMenuByUserId" parameterType="Integer" resultType="Menu">
+        select
+            c.*
+        from
+            x_user_role as a,
+            x_role_menu as b,
+            x_menu as c
+        <where>
+            and
+            a.role_id = b.role_id
+            and
+            b.menu_id = c.menu_id
+            and
+            a.user_id = #{userId}
+            and
+            c.parent_id = #{pid}
+        </where>
 
+    </select>
 </mapper>

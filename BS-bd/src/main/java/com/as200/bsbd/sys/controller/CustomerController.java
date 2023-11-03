@@ -45,15 +45,15 @@ public class CustomerController {
         return Result.success(customer, "查询成功");
     }
     @GetMapping("/list")
-    @ApiOperation("分页获取用户信息，可以根据用户姓名，手机号，房间名进行查询")
+    @ApiOperation("分页获取用户信息，可以根据用户姓名，手机号，房间号进行查询")
     public Result<Map<String, Object>> custormerRoomList(@RequestParam(value = "pageNo") Long pageNo,
                                                          @RequestParam(value = "pageSize") Long pageSize,
                                                          @RequestParam(value = "customerName", required = false)String customerName,
                                                          @RequestParam(value = "customerPhone", required = false)String customerPhone,
                                                          @RequestParam(value = "roomName", required = false) String roomName){
         Map<String, Object> data = new HashMap<>();
-        data.put("total", customerService.getTotal());  // 获取行数
         data.put("customerInfo", customerService.getRoomName(roomName,customerName,customerPhone,pageNo,pageSize));//根据房间查信息
+        data.put("total", customerService.getCustomerRoomTotal(customerName, customerPhone, roomName));  // 获取行数
         return Result.success(data, "查询成功");
     }
 

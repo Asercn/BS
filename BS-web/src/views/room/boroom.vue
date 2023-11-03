@@ -59,7 +59,7 @@ import customerroomApi from "@/api/customerroom"
 export default {
   data() {
     return {
-      total: 3,
+      total: null,
       dialogVisible: false,
       customerInfo: [],
       searchModel: {
@@ -82,15 +82,15 @@ export default {
       this.getCustomer()
     },
     getCustomer() {
+      // this.searchModel.pageNo = 1
       customerApi.getcustomer(this.searchModel).then(rep => {
         this.customerInfo = rep.data.customerInfo
-        this.total = rep.data.total
-
         this.customerInfo.map(data => {
           // console.log(new Date(data.end_date).toLocaleDateString())
           data.end_date = new Date(data.end_date).toLocaleDateString('zh-CN')
           data.start_date = new Date(data.start_date).toLocaleDateString('zh-CN')
         })
+        this.total = rep.data.total
       })
     },
     openOutRoomDialog(row) {
@@ -98,6 +98,7 @@ export default {
       this.customForm.id = row.id
     },
     outRoom() {
+      this.searchModel.pageNo = 1
       customerroomApi.outRoom(this.customForm).then(rep => {
         console.log('退房成功')
         this.$alert(rep.message, '提示', {

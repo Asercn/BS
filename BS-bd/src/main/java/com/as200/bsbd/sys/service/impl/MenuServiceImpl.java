@@ -1,6 +1,7 @@
 package com.as200.bsbd.sys.service.impl;
 
 import com.as200.bsbd.sys.entity.Menu;
+import com.as200.bsbd.sys.entity.Role;
 import com.as200.bsbd.sys.mapper.MenuMapper;
 import com.as200.bsbd.sys.service.IMenuService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -40,6 +41,26 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
                 menu.setChildren(list1);
                 // 递归
                 setMenuChildren(list1);
+            }
+        }
+    }
+
+    @Override
+    public List<Menu> getMenuListByUserId(Integer userId) {
+        // 一级菜单
+        List<Menu> menuList = this.baseMapper.getMenuByUserId(userId, 0);
+        // 子菜单
+        setMenuChildrenByUserId(userId, menuList);
+        return menuList;
+    }
+
+    private void setMenuChildrenByUserId(Integer userId, List<Menu> menuList) {
+        if (menuList != null){
+            for (Menu menu: menuList){
+                List<Menu> subMenuList = this.baseMapper.getMenuByUserId(userId, menu.getMenuId());
+                menu.setChildren(subMenuList);
+                // 递归
+                setMenuChildrenByUserId(userId, subMenuList);
             }
         }
     }

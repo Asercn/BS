@@ -28,7 +28,8 @@ export function getUserInfo(searchModel) {
     method: 'get',
     params: {
       pageNo: searchModel.pageNo,
-      pageSize: searchModel.pageSize
+      pageSize: searchModel.pageSize,
+      username: searchModel.username
     }
   })
 }

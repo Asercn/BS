@@ -1,7 +1,9 @@
 package com.as200.bsbd.sys.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -11,8 +13,9 @@ import org.springframework.stereotype.Controller;
  * @author as200
  * @since 2023-10-30
  */
-@Controller
-@RequestMapping("/sys/roleMenu")
+@RestController
+@RequestMapping("/roleMenu")
+@CrossOrigin
 public class RoleMenuController {
 
 }

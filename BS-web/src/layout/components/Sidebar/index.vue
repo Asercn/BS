@@ -32,6 +32,7 @@ export default {
     ]),
     routes() {
       return this.$router.options.routes
+        .concat(global.myRoutes)
     },
     activeMenu() {
       const route = this.$route

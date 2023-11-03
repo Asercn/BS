@@ -3,15 +3,13 @@ package com.as200.bsbd.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-
 //@Configuration
 public class MyCorsConfig {
-    @Bean
+//    @Bean
     public CorsFilter corsFilter(){
         CorsConfiguration configuration = new CorsConfiguration();
 //        允许的域
@@ -26,4 +24,5 @@ public class MyCorsConfig {
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", configuration);
         return new CorsFilter(urlBasedCorsConfigurationSource);
     }
+
 }
