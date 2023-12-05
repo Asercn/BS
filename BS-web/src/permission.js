@@ -9,7 +9,7 @@ import Layout from '@/layout'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/login', '/register'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -38,11 +38,11 @@ router.beforeEach(async(to, from, next) => {
           let myRoutes = myFilterAsyncRoutes(store.getters.menuList)
 
           // 404
-          myRoutes.push({
-            path: '*',
-            redirect: '/404',
-            hidden: true
-          })
+          // myRoutes.push({
+          //   path: '*',
+          //   redirect: '/404',
+          //   hidden: true
+          // })
           console.log('过了404页面')
           // 动态添加路由
           router.addRoutes(myRoutes)

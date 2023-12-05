@@ -16,5 +16,5 @@ import java.util.Map;
  */
 public interface RoomMapper extends BaseMapper<Room> {
 
-    List<Map<String,String>> getRoomInfo();
+    Map<String,String> getRoomInfo();
 }

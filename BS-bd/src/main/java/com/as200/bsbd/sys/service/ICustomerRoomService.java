@@ -3,6 +3,8 @@ package com.as200.bsbd.sys.service;
 import com.as200.bsbd.sys.entity.CustomerRoom;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICustomerRoomService extends IService<CustomerRoom> {
 
+
+    Object getboRoomList();
 }

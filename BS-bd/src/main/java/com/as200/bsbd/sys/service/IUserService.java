@@ -23,4 +23,8 @@ public interface IUserService extends IService<User> {
     Object getUserInfo(Long pageNo, Long pageSize, String userName);
 
     Map<String, Object> getUserInfoByID(Integer userID);
+
+    void saveUser(User user);
+
+    Boolean findByUsername(String username);
 }

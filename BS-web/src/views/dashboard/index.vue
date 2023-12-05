@@ -6,21 +6,45 @@
     <!--      展示栏-->
     <el-divider/>
     <el-main>
-      <el-card class="dashboard-box-card">
-        <p style="font-weight: bold;">今日数据</p>
-        <el-table :data="tableData">
-          <el-table-column label="#" align="left"></el-table-column>
-          <el-table-column label="开房(间)" prop="oroom"></el-table-column>
-          <el-table-column label="空房(间)" prop="eroom"></el-table-column>
-          <el-table-column label="#" align="right"></el-table-column>
-        </el-table>
+      <el-card>
+        <p style="font-weight: bold;">房间数据</p>
+        <div>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <span class="textpd">已开房间:</span>
+              <div style="display: inline">{{ tableData.oroom}}</div>
+            </li>
+            <li class="list-group-item">
+              <span class="textpd">未开房间:</span>
+              <div style="display: inline">{{ tableData.eroom}}</div>
+            </li>
+            <li class="list-group-item">
+              <span class="textpd" style="display: inline-block">占 比:</span>
+              <div style="width: 110em;display: inline-block">
+                <el-progress
+                  :text-inside="true"
+                  :percentage="percent"
+                  :stroke-width="20"></el-progress>
+              </div>
+            </li>
+          </ul>
+        </div>
       </el-card>
-      <el-collapse>
-        <el-collapse-item title="日历">
-          <el-calendar v-model="calendar">
-          </el-calendar>
-        </el-collapse-item>
-      </el-collapse>
+<!--      <el-card>-->
+<!--        <p style="font-weight: bold;">今日营业额</p>-->
+<!--        <el-table></el-table>-->
+<!--        <el-table-column label="收入" prop="">1</el-table-column>-->
+<!--        <el-table-column></el-table-column>-->
+<!--      </el-card>-->
+
+      <el-card>
+        <el-collapse>
+          <el-collapse-item title="日历">
+            <el-calendar v-model="calendar">
+            </el-calendar>
+          </el-collapse-item>
+        </el-collapse>
+      </el-card>
     </el-main>
   </div>
 
@@ -31,25 +55,32 @@ import { mapGetters } from 'vuex'
 import roomApi from '@/api/room'
 
 export default {
-  name: 'Dashboard',
   computed: {
     ...mapGetters([
       'name'
-    ])
+    ]),
+    percent() {
+      if (this.tableData.oroom === null || this.tableData.eroom === null) {
+        return 0
+      } else {
+        // console.log(((this.tableData.oroom) / (this.tableData.oroom + this.tableData.eroom)) * 100)
+        return parseInt(((this.tableData.oroom) / (this.tableData.oroom + this.tableData.eroom)) * 100)
+      }
+    }
   },
   data() {
     return {
-      drawer: false,
       calendar: new Date(),
-      tableData: [],
-      oroom: null,
-      eroom: null
+      tableData: {
+        oroom: null,
+        eroom: null
+      }
     }
   },
   methods: {
     getRoomInfo() {
       roomApi.getRoomInfo().then(rep => {
-        this.tableData = rep.data.tableData
+        this.tableData = rep.data
       })
     }
   },
@@ -57,10 +88,24 @@ export default {
     this.getRoomInfo()
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
+.textpd{
+  padding-right: 30px;
+}
+.list-group {
+  padding-left: 0px;
+  list-style: none;
+}
+.list-group-item {
+  border-bottom: 1px solid #e7eaec;
+  border-top: 1px solid #e7eaec;
+  margin-bottom: -1px;
+  padding: 11px 0px;
+  font-size: 13px;
+}
+
 .dashboard {
   &-container {
     margin: 30px;

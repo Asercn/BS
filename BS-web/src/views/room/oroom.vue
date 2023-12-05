@@ -1,13 +1,13 @@
 <template>
   <el-main>
-    <h3>房间状态</h3>
+    <h3>订 房</h3>
     <el-divider/>
     <el-card>
       <el-input v-model="searchModel.roomname" placeholder="房间号" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
-      <el-button @click="getRoomList" type="primary">查询</el-button>
+      <el-button @click="getRoomList1" type="primary">查询</el-button>
     </el-card>
     <el-card class="oroom_body example-pagination-block">
-      <!-- dialog -->
+      <!-- 开房dialog -->
       <el-dialog :title="customerRoomTitle" :visible.sync="dialogFormVisible" @close="clearForm()" width="35rem">
         <el-form :model="customerRoomForm" :rules="rules" ref="customerRoomFormRef">
           <el-form-item label="姓名:" :label-width="formLabelWidth" prop="customerName">
@@ -49,19 +49,40 @@
         <div slot="footer" class="dialog-footer">
           <el-button @click="resetForm()">重 置</el-button>
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveCustomerRoomForm()">确 定</el-button>
+          <el-button type="primary" @click="saveCustomerRoomForm()">订 房</el-button>
         </div>
       </el-dialog>
-      <el-button class="r el-icon-s-home" v-for="(v,i) in orooms" :class="setRoomState(v.roomId) " :key="i" @click="openRoomUI(v)" v-if="">
-        {{ v.roomName }}
-      </el-button>
+      <!--    退房对话框-->
+      <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        width="30%">
+        <span>确定退房嘛？</span>
+        <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="outRoom()">确 定</el-button>
+      </span>
+      </el-dialog>
+      <div>
+        <el-row>
+          <el-col v-for="(v,i) in orooms" :key="i" :span="2">
+            <el-button class="r el-icon-s-home"  @click="openRoomUI(v)" v-if="!isRoomIdInboRoomList(v.roomId)">
+              {{ v.roomName }}
+            </el-button>
+            <el-button class="r el-icon-s-home activeState" @click="exitRoomUI(v)" v-else>
+              {{ v.roomName }}
+            </el-button>
+          </el-col>
+        </el-row>
+      </div>
+
       <!--        分页-->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="searchModel.pageNo"
         :page-size="searchModel.pageSize"
-        :page-sizes="[10, 20, 50, 100]"
+        :page-sizes="[30, 60, 100, 200]"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
@@ -110,7 +131,7 @@ export default {
         sex: { required: true, message: '请选择性别', trigger: 'blur' },
         customerPhone: [
           { required: true, message: '请输入电话号码', trigger: 'blur' },
-          { validator: validateNumber, trigger: 'blur' },
+          { validator: validateNumber, trigger: 'blur' }
         ],
         customerIdNumber: [
           { required: true, message: '请输入身份证号', trigger: 'blur' },
@@ -147,42 +168,27 @@ export default {
       customerRoom: {},
       customerRoomTitle: null,
       dialogFormVisible: false,
+      dialogVisible: false,
       formLabelWidth: '7rem',
       total: 0,
       orooms: [],
       searchModel: {
         roomname: null,
         pageNo: 1,
-        pageSize: 10
+        pageSize: 30
       },
-      // status: ''
+      boroomList: []
     }
   },
   methods: {
-    // 还不知道怎么用来改变状态
-    async setRoomState(roomId) {
-      try {
-        // 获取到这个按钮的房间的ID
-        // 查询这个房间的最大的endDate是否大于等于今天，
-        // 如果是今天则为'active'，否则为'normal'
-        const response = await customerroomApi.getLastCustomerRoomByRoomId(roomId)
-        // console.log(response)
-        if (response.data === null) {
-          return 'normalState'
-        }
-        const customerRoom = response.data.customerRoom
-        console.log('时间' + new Date(customerRoom.endDate))
-        if (new Date(customerRoom.endDate) > new Date()) {
-          console.log('房间已开')
-          return 'activeState'
-        } else {
-          console.log('房间空')
-          return 'normalState'
-        }
-      } catch (error) {
-        console.log('获取信息失败', error)
-        return 'normalState'
-      }
+    getBoRoomList() {
+      // 获取到已开房间的列表
+      customerroomApi.getBoRoomList().then(rep => {
+        this.boroomList = rep.data.boroomList
+      })
+    },
+    isRoomIdInboRoomList(id) {
+      return this.boroomList.some(item => item.roomId === id)
     },
     saveCustomerRoomForm() {
       // 获取房间名字
@@ -209,6 +215,8 @@ export default {
                 this.$alert(rep2.message, '提示', {
                   confirmButtonText: '确定'
                 })
+                this.getRoomList()
+                this.getBoRoomList()
                 this.dialogFormVisible = false
               })
             } else {
@@ -224,28 +232,11 @@ export default {
               })
             }
           })
-          // customerroomApi.getCustomerRoomById(this.customerRoomForm.roomId).then(rep => {
-          //
-          //   // // 判断房间是否为空
-          //   // if (rep.data.customerRoom.endDate >= todayDate) {  // 不为空
-          //   //   this.$alert('入住失败，此房间已经开出', '提示', {
-          //   //     confirmButtonText: '确定',
-          //   //     callback: action => {
-          //   //       this.$message({
-          //   //         type: 'info',
-          //   //         message: `action: ${action}`
-          //   //       })
-          //   //     }
-          //   //   })
-          //   // } else {  // 房间空
-          //   //
-          //   // }
-          // })
         }
       })
     },
     resetForm() {
-      this.$refs.customerRoomFormRef.resetFields()  // 重置表单
+      this.$refs.customerRoomFormRef.resetFields() // 重置表单
     },
     openRoomUI(v) {
       this.customerRoomTitle = '房间:' + v.roomName
@@ -254,9 +245,34 @@ export default {
       // 返回roomId
       console.log(v.roomId)
     },
+    exitRoomUI(v) {
+      this.searchModel.pageNo = 1
+      customerroomApi.getCustomerRoomByRoomId(v.roomId).then(rep => {
+        this.customerRoom.id = rep.data.customerRoom[0].id
+      })
+      this.dialogVisible = true
+      // console.log(this.customerRoom.id)
+    },
+    outRoom() {
+      this.searchModel.pageNo = 1
+      customerroomApi.outRoom(this.customerRoom).then(rep => {
+        console.log('退房成功')
+        this.$alert(rep.message, '提示', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'success',
+              message: `提示: ${rep.message}`
+            })
+          }
+        })
+        this.dialogVisible = false
+        this.getCustomer()
+      })
+    },
     clearForm() {
-      this.customerRoomForm = {}  // 清除表单信息
-      this.$refs.customerRoomFormRef.clearValidate()  // 清除表单校验结果
+      this.customerRoomForm = {} // 清除表单信息
+      this.$refs.customerRoomFormRef.clearValidate() // 清除表单校验结果
     },
     handleSizeChange(pageSize) {
       this.searchModel.pageSize = pageSize
@@ -267,16 +283,20 @@ export default {
       this.getRoomList()
     },
     getRoomList() {
-      this.searchModel.pageNo = 1
       roomApi.getRoom(this.searchModel).then(rep => {
         this.orooms = rep.data.rows
         this.total = rep.data.total
       })
+    },
+    getRoomList1() {
+      this.searchModel.pageNo = 1
+      this.getRoomList()
     }
   },
   // 钩子函数
   created() {
     this.getRoomList()
+    this.getBoRoomList()
   },
   computed: {
     // computedClass() {
@@ -307,6 +327,7 @@ export default {
 </script>
 
 <style scoped>
+
 .r {
   width: 7rem;
   height: 7rem;
@@ -318,10 +339,8 @@ export default {
 }
 
 .activeState {
-  background-color: green;
+  background-color: #39c5bb;
   color: white;
-}
-.normalState {
 }
 
 </style>

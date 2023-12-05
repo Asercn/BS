@@ -64,9 +64,8 @@ public class RoomController {
 
     // 查询开出去的房间数量，没开出去的房间数量
     @GetMapping("/info")
-    public Result<Map<String, Object>> RoomInfo(){
-        Map<String, Object> data = new HashMap<>();
-        data.put("tableData", roomService.getRoomInfo());
+    public Result<Map<String, String>> RoomInfo(){
+        Map<String, String> data = roomService.getRoomInfo();
         return Result.success(data,"查询成功");
     }
 

@@ -16,6 +16,11 @@
               首页
             </el-dropdown-item>
           </router-link>
+          <router-link to="/personal">
+            <el-dropdown-item>
+              个人信息
+            </el-dropdown-item>
+          </router-link>
           <a target="_blank" href="https://github.com/Asercn/BS">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>

@@ -15,6 +15,13 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import axios from 'axios'
+
+Vue.config.productionTip = false
+// 设置默认请求地址
+axios.defaults.baseURL = 'http://192.168.31.233:9998'
+Vue.prototype.$axios = axios
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

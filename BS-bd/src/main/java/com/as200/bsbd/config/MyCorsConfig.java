@@ -13,7 +13,7 @@ public class MyCorsConfig {
     public CorsFilter corsFilter(){
         CorsConfiguration configuration = new CorsConfiguration();
 //        允许的域
-        configuration.addAllowedOrigin("http://localhost:9528");
+        configuration.addAllowedOrigin("http://192.168.31.233:9528");
 //        是否发送cookie信息
         configuration.setAllowCredentials(true);
 //        允许的请求方式

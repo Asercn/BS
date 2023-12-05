@@ -4,6 +4,7 @@ import com.as200.bsbd.common.vo.Result;
 import com.as200.bsbd.sys.entity.CustomerRoom;
 import com.as200.bsbd.sys.service.ICustomerRoomService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,7 @@ public class CustomerRoomController {
     private ICustomerRoomService customerRoomService;
 
     // 根据房间ID查询开房的信息
+    @ApiOperation("根据房间ID查询开房的信息")
     @GetMapping("/{roomId}")
     public Result<?> getCustomerRoomByRoomId(@PathVariable(value = "roomId")Integer roomId){
         LambdaQueryWrapper<CustomerRoom> wrapper = new LambdaQueryWrapper<>();
@@ -41,19 +43,12 @@ public class CustomerRoomController {
         return Result.success(data,"查询成功");
     }
 
-    @GetMapping("/last/{roomId}")
-    public Result<?> getLastCustomerRoomByRoomId(@PathVariable(value = "roomId")Integer roomId){
-        LambdaQueryWrapper<CustomerRoom> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(roomId != null, CustomerRoom::getRoomId, roomId);
-        wrapper.orderByDesc(CustomerRoom::getEndDate);
-        List<CustomerRoom> customerRoomList = customerRoomService.list(wrapper);
-        if (!customerRoomList.isEmpty()){
-            Map<String,Object> data = new HashMap<>();
-            data.put("customerRoom",customerRoomList.get(0));
-            return Result.success(data,"查询成功");
-        }else{
-            return Result.success("房间未开");
-        }
+    @GetMapping("/boroomList")
+    @ApiOperation("获取到已经开的房间的列表,返回房间的ID信息")
+    public Result<?> getBoRoomList(){
+        Map<String, Object> data = new HashMap();
+        data.put("boroomList", customerRoomService.getboRoomList());
+        return Result.success(data,"查询成功");
     }
 
 
@@ -68,6 +63,7 @@ public class CustomerRoomController {
 
 
     @PutMapping
+    @ApiOperation("根据开房的订单号来退房")
     public Result<?> outRoom(@RequestBody CustomerRoom customerRoom){
         LocalDate currentDate = LocalDate.now();
         System.out.println(currentDate);

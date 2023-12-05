@@ -30,7 +30,6 @@
       <el-table-column prop="room_name" label="房间号" width="150"></el-table-column>
       <el-table-column prop="start_date" label="入住时间"></el-table-column>
       <el-table-column prop="end_date" label="退房时间" ></el-table-column>
-      <el-table-column prop="room_price" label="支付金额" ></el-table-column>
       <el-table-column prop="room_state" label="退房操作" align="center">
         <template slot-scope="scope">
           <el-button type="danger" v-if="scope.row.room_state==1" @click="openOutRoomDialog(scope.row)">退房</el-button>

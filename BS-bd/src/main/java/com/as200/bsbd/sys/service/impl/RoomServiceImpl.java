@@ -6,6 +6,8 @@ import com.as200.bsbd.sys.service.IRoomService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 /**
  * <p>
  *  服务实现类
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements IRoomService {
 
     @Override
-    public Object getRoomInfo() {
+    public Map<String, String> getRoomInfo() {
         return this.baseMapper.getRoomInfo();
     }
 }

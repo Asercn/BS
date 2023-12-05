@@ -6,6 +6,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
+
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -54,6 +55,22 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard', affix: true }
     }]
   },
+  {
+    name: 'register',
+    path: '/register',
+    component: () => import('@/views/register/index') // 注册页面的组件
+  },
+  { // 个人信息
+    path: '/personal',
+    component: Layout,
+    hidden: true,
+    children: [{
+      name: 'personal',
+      path: '',
+      component: () => import('@/views/personal/index')
+    }]
+  }
+
   // {
   //   path: '/user',
   //   component: Layout,

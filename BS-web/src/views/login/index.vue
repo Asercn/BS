@@ -41,7 +41,10 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登入</el-button>
+      <div style="width: 100%;">
+        <el-button :loading="loading" type="primary" style="width:48%;margin-bottom:30px;" @click.native.prevent="handleLogin">登入</el-button>
+        <el-button :loading="rloading" style="width:48%;margin-bottom:30px;" @click.native.prevent="handRegister">注册</el-button>
+      </div>
 
     </el-form>
   </div>
@@ -77,6 +80,7 @@ export default {
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       loading: false,
+      rloading: false,
       passwordType: 'password',
       redirect: undefined
     }
@@ -105,7 +109,7 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+            this.$router.push({ path: '/' })
             this.loading = false
           }).catch(() => {
             this.loading = false
@@ -115,6 +119,11 @@ export default {
           return false
         }
       })
+    },
+    handRegister() {
+      this.rloading = true
+      this.$router.push({ path: '/register' })
+      this.rloading = false
     }
   }
 }

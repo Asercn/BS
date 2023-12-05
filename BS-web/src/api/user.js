@@ -59,3 +59,10 @@ export function updateUserRole(userRoleForm) {
     data: userRoleForm
   })
 }
+export function addUser(userForm) {
+  return request({
+    url: '/user/add',
+    method: 'post',
+    data: userForm
+  })
+}

@@ -1,9 +1,15 @@
 import request from '@/utils/request'
 
 export default {
-  getLastCustomerRoomByRoomId(Id) {
+  getBoRoomList() {
     return request({
-      url: `/customerRoom/last/${Id}`,
+      url: `/customerRoom/boroomList`,
+      method: 'get'
+    })
+  },
+  getCustomerRoomByRoomId(roomId) {
+    return request({
+      url: `/customerRoom/${roomId}`,
       method: 'get'
     })
   },

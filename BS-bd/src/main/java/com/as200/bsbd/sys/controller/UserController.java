@@ -46,9 +46,10 @@ public class UserController {
         return Result.fail(20002,"用户名或密码错误");
     }
 
+    @ApiOperation("获取用户的登入信息")
     @GetMapping("/info")
     public Result<Map<String, Object>> info(@RequestParam("token") String token){
-        //从redis获取用户信息
+
         Map<String, Object> data = userService.getUserInfo(token);
         if (!data.isEmpty()){
             return Result.success(data);
@@ -77,12 +78,14 @@ public class UserController {
     }
 
     // 根据用户ID获取到用户的信息
+    @ApiOperation("根据用户ID获取到用户的信息")
     @GetMapping("/{userID}")
     public Result<?> getUserInfoByID(@PathVariable(value = "userID")Integer userID){
         Map<String, Object> data = userService.getUserInfoByID(userID);
         return Result.success(data, "查询成功");
     }
 
+    @ApiOperation("删除用户以及相关信息")
     @DeleteMapping("/{userID}")
     public Result<?> deleteUserInfoByUserID(@PathVariable(value = "userID")Integer userID){
         // 移除用户信息
@@ -94,10 +97,29 @@ public class UserController {
 
 
     // 根据用户ID修改用户信息
+    @ApiOperation("根据用户ID修改用户信息")
     @PutMapping
     public Result<?> updateUser(@RequestBody User user){
         userService.updateById(user);
         return Result.success("修改成功");
+    }
+
+    @ApiOperation("新增用户,以及用户的默认角色")
+    @PostMapping("/add")
+    public Result<?> addUser(@RequestBody User user) {
+        userService.saveUser(user);
+        return Result.success("新增成功");
+    }
+
+    @ApiOperation("根据传入的用户名来判断数据库中是否有这个用户名由此判断能否注册此用户")
+    @GetMapping("/checkUser")
+    public Result<Boolean> CheckUser(@RequestParam String username) {
+        // 查询数据库中是否存在该用户名
+        Boolean data = userService.findByUsername(username);
+
+        return Result.success(data);
+
+
     }
 
 }
