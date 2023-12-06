@@ -7,14 +7,25 @@
             <span>个人信息</span>
           </div>
           <div>
+            <img :src="cat" alt="avatar" class="user-avatar">
+          </div>
+          <div>
             <ul class="list-group">
               <li class="list-group-item">
-                <i class="el-icon-user-solid">用户名称</i>
-                <div class="pull-right">{{ user.name }}</div>
+                <i class="el-icon-user">用户名称</i>
+                <div class="pull-right">{{ user.username }}</div>
               </li>
               <li class="list-group-item">
                 <i class="el-icon-phone" >手机号码</i>
-                <div class="pull-right">{{ user.id }}</div>
+                <div class="pull-right">{{ user.phone }}</div>
+              </li>
+              <li class="list-group-item">
+                <i class="el-icon-message" >邮 箱</i>
+                <div class="pull-right">{{ user.email }}</div>
+              </li>
+              <li class="list-group-item">
+                <i class="el-icon-user-solid" >角色</i>
+                <div class="pull-right">{{ user.role_desc }}</div>
               </li>
             </ul>
           </div>
@@ -26,27 +37,28 @@
 
 <script>
 import { mapGetters } from "vuex"
-// import userApi from '@/api/user'
+import { getUserInfoOrByUserID } from '@/api/user'
+import myavatar from '@/icons/gif/index'
 
 export default {
   computed: {
     ...mapGetters([
       'name',
-      'token'
+      'id'
       // 通过token获取到用户的信息以来获取用户的资料  --2023年12月3日16:59:34
     ])
   },
   data() {
     return {
-      user: {}
+      user: {},
+      ...myavatar.data()
     }
   },
   methods: {
     getUser() {
-      // userApi.getInfo(this.token).then(rep => {
-      //   this.user.id = rep.data.id
-      //   console.log(this.user)
-      // })
+      getUserInfoOrByUserID(this.id).then(rep => {
+        this.user = rep.data
+      })
     }
   },
   created() {
@@ -78,5 +90,13 @@ export default {
 }
 .pull-right {
   float: right !important;
+}
+.user-avatar {
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: solid 1px;
+  border-color: #f4f4f4;
 }
 </style>
