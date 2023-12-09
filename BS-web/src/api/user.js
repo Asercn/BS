@@ -66,3 +66,14 @@ export function addUser(userForm) {
     data: userForm
   })
 }
+// 修改密码
+export function updatePassWord(id, oldPassword, newPassword) {
+  const data = {
+    id, oldPassword, newPassword
+  }
+  return request({
+    url: '/user/changepwd',
+    method: 'put',
+    params: data
+  })
+}

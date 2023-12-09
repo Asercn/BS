@@ -153,4 +153,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
     }
+
+    @Override
+    public User checkOldPwd(Integer id, String oldpwd) {
+        // 获取到此ID的用户的原旧密码
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getId, id);
+        User user = this.baseMapper.selectOne(wrapper);
+        // 用原来的旧密码和oldpwd进行比较
+        // 传回一个USER类型
+        if (user != null && passwordEncoder.matches(oldpwd, user.getPassword())) {
+            return user;
+        } else {
+            return null;
+        }
+    }
 }

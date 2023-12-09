@@ -27,4 +27,6 @@ public interface IUserService extends IService<User> {
     void saveUser(User user);
 
     Boolean findByUsername(String username);
+
+    User checkOldPwd(Integer id, String oldpwd);
 }

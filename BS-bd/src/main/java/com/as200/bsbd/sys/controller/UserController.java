@@ -8,6 +8,7 @@ import com.as200.bsbd.sys.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,9 @@ import java.util.Objects;
 @RequestMapping("/user")
 @CrossOrigin // 跨域处理
 public class UserController {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private IUserService userService;
     @Autowired
@@ -56,6 +60,7 @@ public class UserController {
         }
         return Result.fail(20003,"用户登入信息无效，请重新登入");
     }
+    @ApiOperation("登出方法")
     @PostMapping("/logout")
     public Result<?> logout(@RequestHeader("X-Token") String token){
         //从redis中清除key
@@ -104,11 +109,28 @@ public class UserController {
         return Result.success("修改成功");
     }
 
+    @ApiOperation("修改密码")
+    @PutMapping("/changepwd")
+    public Result<?> updatePassWord(@RequestParam(value = "id")Integer ID,
+                                    @RequestParam(value = "oldPassword")String oldpwd,
+                                    @RequestParam(value = "newPassword")String newpwd) {
+        // 查询旧密码是否和原旧密码相等
+        User user = userService.checkOldPwd(ID,oldpwd);
+        if (user != null) {
+            // 修改密码并加密
+            user.setPassword(passwordEncoder.encode(newpwd));
+            userService.updateById(user);
+            return Result.success("修改成功,请重新登入");
+        } else {
+            return Result.fail("修改失败,可能是原密码不正确");
+        }
+    }
+
     @ApiOperation("新增用户,以及用户的默认角色")
     @PostMapping("/add")
     public Result<?> addUser(@RequestBody User user) {
         userService.saveUser(user);
-        return Result.success("新增成功");
+        return Result.success("注册成功");
     }
 
     @ApiOperation("根据传入的用户名来判断数据库中是否有这个用户名由此判断能否注册此用户")
@@ -116,10 +138,9 @@ public class UserController {
     public Result<Boolean> CheckUser(@RequestParam String username) {
         // 查询数据库中是否存在该用户名
         Boolean data = userService.findByUsername(username);
-
         return Result.success(data);
-
-
     }
+
+
 
 }

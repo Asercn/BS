@@ -152,7 +152,7 @@ export default {
           // console.log('我在这里')
           addUser(this.registerForm).then(rep => {
             this.$message({
-              message: 'action:' + rep.message,
+              message: rep.message,
               type: 'success'
             })
           })
