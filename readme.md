@@ -19,3 +19,13 @@
 - [ ] 个人信息可以修改头像
 - [ ] 丰富点内容，如图标，表格等数据
 
+##	环境
+
+- 操作系统:Windows10 专业版
+- 系统类型:x64
+- 版本号:21H2
+- JAVA版本:Dragonwell 17
+- 处理器:AMD Ryzen 7 3700X 8-Core Processor 3.6GHz
+- RAM:16GB
+- npm版本: v8.1.0
+- Node.js版本: v16.12.0
