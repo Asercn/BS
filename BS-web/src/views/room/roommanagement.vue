@@ -5,6 +5,7 @@
     <el-card>
       <el-input v-model="searchModel.roomname" placeholder="房间号" style="width: 180px; margin-right: 0.5rem" clearable></el-input>
       <el-button @click="getRoomList" type="primary">查询</el-button>
+      <el-button @click="reset">重 置</el-button>
     </el-card>
     <el-card>
       <el-row class="buttonRow">
@@ -166,6 +167,9 @@ export default {
         this.roomData = rep.data.roomData
         this.total = rep.data.total
       })
+    },
+    reset() {
+      this.searchModel.roomname = null
     }
   },
   created() {

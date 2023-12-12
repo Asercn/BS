@@ -54,6 +54,8 @@ public class CustomerRoomController {
 
     @PostMapping
     public Result<?> addCustomerRoom(@RequestBody CustomerRoom customerRoom){
+        // 纠正一些错误
+        customerRoom.setId(null);
         // 校准时间
         customerRoom.setStartDate(customerRoom.getStartDate().plusDays(1));
         customerRoom.setEndDate(customerRoom.getEndDate().plusDays(1));
@@ -67,6 +69,7 @@ public class CustomerRoomController {
     public Result<?> outRoom(@RequestBody CustomerRoom customerRoom){
         LocalDate currentDate = LocalDate.now();
         System.out.println(currentDate);
+        customerRoom.setStartDate(null); // 补丁
         customerRoom.setEndDate(currentDate);
         customerRoomService.updateById(customerRoom);
         return Result.success("退房成功");

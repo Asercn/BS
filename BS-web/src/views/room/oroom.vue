@@ -5,6 +5,7 @@
     <el-card>
       <el-input v-model="searchModel.roomname" placeholder="房间号" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
       <el-button @click="getRoomList1" type="primary">查询</el-button>
+      <el-button @click="reset">重 置</el-button>
     </el-card>
     <el-card class="oroom_body example-pagination-block">
       <!-- 开房dialog -->
@@ -210,7 +211,7 @@ export default {
               this.customerRoom.roomId = this.customerRoomForm.roomId
               this.customerRoom.startDate = this.customerRoomForm.startDate
               this.customerRoom.endDate = this.customerRoomForm.endDate
-              // 添加开房订单
+              // 添加开房记录
               customerroomApi.addCustomerRoom(this.customerRoom).then(rep2 => {
                 this.$alert(rep2.message, '提示', {
                   confirmButtonText: '确定'
@@ -218,6 +219,15 @@ export default {
                 this.getRoomList()
                 this.getBoRoomList()
                 this.dialogFormVisible = false
+              })
+              // 添加开房订单 2023年12月12日
+              roomApi.getRoomById(this.customerRoomForm.roomId).then(rep => {
+                const roomPrice = rep.data.roomPrice
+                // console.log(this.customerRoom.endDate.getTime())
+                // console.log(this.customerRoom.startDate.getTime())
+                const date = (this.customerRoom.endDate - this.customerRoom.startDate) / (1000 * 60 * 60 * 24)
+                const income = (roomPrice * date + '收入')
+                console.log(income)
               })
             } else {
               console.log('顾客信息添加失败')
@@ -253,9 +263,9 @@ export default {
       this.dialogVisible = true
       // console.log(this.customerRoom.id)
     },
-    outRoom() {
+    async outRoom() {
       this.searchModel.pageNo = 1
-      customerroomApi.outRoom(this.customerRoom).then(rep => {
+      await customerroomApi.outRoom(this.customerRoom).then(rep => {
         console.log('退房成功')
         this.$alert(rep.message, '提示', {
           confirmButtonText: '确定',
@@ -267,8 +277,13 @@ export default {
           }
         })
         this.dialogVisible = false
-        this.getCustomer()
       })
+      this.getRoomList()
+      this.getBoRoomList()
+      this.getRoomList1()
+    },
+    reset() {
+      this.searchModel.roomname = null
     },
     clearForm() {
       this.customerRoomForm = {} // 清除表单信息
@@ -299,28 +314,7 @@ export default {
     this.getBoRoomList()
   },
   computed: {
-    // computedClass() {
-    //   return {
-    //     'activeState': this.status === 'active',
-    //     'normalState': this.status === 'normal'
-    //   }
-    // }
-    // utcDateValue() {
-    //   if (this.customerRoomForm.startDate) {
-    //     return new Date(Date.UTC(
-    //       this.customerRoomForm.startDate.getFullYear(),
-    //       this.customerRoomForm.startDate.getMonth(),
-    //       this.customerRoomForm.startDate.getDate())
-    //     )
-    //   }
-    //   if (this.customerRoomForm.endDate) {
-    //     return new Date(Date.UTC(
-    //       this.customerRoomForm.endDate.getFullYear(),
-    //       this.customerRoomForm.endDate.getMonth(),
-    //       this.customerRoomForm.endDate.getDate())
-    //     )
-    //   }
-    // }
+
   }
 }
 

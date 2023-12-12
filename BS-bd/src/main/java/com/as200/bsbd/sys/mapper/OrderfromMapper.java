@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author as200
- * @since 2023-12-05
+ * @since 2023-12-12
  */
 public interface OrderfromMapper extends BaseMapper<Orderfrom> {
 

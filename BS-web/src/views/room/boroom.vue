@@ -8,6 +8,7 @@
     <el-input v-model="searchModel.customerName" placeholder="姓名" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
     <el-input v-model="searchModel.customerPhone" placeholder="电话" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
     <el-button @click="getCustomer" type="primary">查询</el-button>
+    <el-button @click="reset">重 置</el-button>
   </el-card>
   <el-card>
     <!--    退房对话框-->
@@ -81,7 +82,6 @@ export default {
       this.getCustomer()
     },
     getCustomer() {
-      // this.searchModel.pageNo = 1
       customerApi.getcustomer(this.searchModel).then(rep => {
         this.customerInfo = rep.data.customerInfo
         this.customerInfo.map(data => {
@@ -95,6 +95,11 @@ export default {
     openOutRoomDialog(row) {
       this.dialogVisible = true
       this.customForm.id = row.id
+    },
+    reset() {
+      this.searchModel.customerName = null
+      this.searchModel.roomName = null
+      this.searchModel.customerPhone = null
     },
     outRoom() {
       this.searchModel.pageNo = 1

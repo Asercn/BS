@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author as200
- * @since 2023-12-05
+ * @since 2023-12-12
  */
 @TableName("x_orderfrom")
 public class Orderfrom implements Serializable {
@@ -22,17 +23,13 @@ public class Orderfrom implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private String customerName;
+    private LocalDateTime date;
 
-    private String roomName;
+    private BigDecimal income;
 
-    private LocalDateTime startDate;
+    private String orderNumber;
 
-    private LocalDateTime endDate;
-
-    private Object money;
-
-    private Integer deleted;
+    private String orderSource;
 
     public Integer getId() {
         return id;
@@ -42,64 +39,46 @@ public class Orderfrom implements Serializable {
         this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public LocalDateTime getDate() {
+        return date;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
-    public String getRoomName() {
-        return roomName;
+    public BigDecimal getIncome() {
+        return income;
     }
 
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
+    public void setIncome(BigDecimal income) {
+        this.income = income;
     }
 
-    public LocalDateTime getStartDate() {
-        return startDate;
+    public String getOrderNumber() {
+        return orderNumber;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
+    public String getOrderSource() {
+        return orderSource;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
-    public Object getMoney() {
-        return money;
-    }
-
-    public void setMoney(Object money) {
-        this.money = money;
-    }
-
-    public Integer getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
+    public void setOrderSource(String orderSource) {
+        this.orderSource = orderSource;
     }
 
     @Override
     public String toString() {
         return "Orderfrom{" +
             "id = " + id +
-            ", customerName = " + customerName +
-            ", roomName = " + roomName +
-            ", startDate = " + startDate +
-            ", endDate = " + endDate +
-            ", money = " + money +
-            ", deleted = " + deleted +
+            ", date = " + date +
+            ", income = " + income +
+            ", orderNumber = " + orderNumber +
+            ", orderSource = " + orderSource +
         "}";
     }
 }
