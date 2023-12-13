@@ -8,6 +8,6 @@
         from
             x_customer_room AS a
         where
-            a.end_date >= CURDATE()
+            a.end_date > CURDATE()
     </select>
 </mapper>

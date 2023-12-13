@@ -32,9 +32,13 @@ public class OrderfromController {
         return Result.success(data,"查询成功");
     }
 
-//    @PostMapping("/add")
-//    public Result<?> addOrder() {
-//
-//    }
+    @ApiOperation("增加交易记录")
+    @PostMapping("/add")
+    public Result<?> addOrder(@RequestBody Orderfrom orderfrom) {
+        orderfrom.setId(null);
+        orderfromService.save(orderfrom);
+        return Result.success("增加成功");
+
+    }
 
 }

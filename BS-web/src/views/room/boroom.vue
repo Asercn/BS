@@ -95,15 +95,16 @@ export default {
     openOutRoomDialog(row) {
       this.dialogVisible = true
       this.customForm.id = row.id
+      this.customForm.start_Date = row.start_date
     },
     reset() {
       this.searchModel.customerName = null
       this.searchModel.roomName = null
       this.searchModel.customerPhone = null
     },
-    outRoom() {
+    async outRoom() {
       this.searchModel.pageNo = 1
-      customerroomApi.outRoom(this.customForm).then(rep => {
+      await customerroomApi.outRoom(this.customForm).then(rep => {
         console.log('退房成功')
         this.$alert(rep.message, '提示', {
           confirmButtonText: '确定',

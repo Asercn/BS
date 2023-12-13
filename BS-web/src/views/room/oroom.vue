@@ -9,43 +9,61 @@
     </el-card>
     <el-card class="oroom_body example-pagination-block">
       <!-- 开房dialog -->
-      <el-dialog :title="customerRoomTitle" :visible.sync="dialogFormVisible" @close="clearForm()" width="35rem">
+      <el-dialog :title="customerRoomTitle" :visible.sync="dialogFormVisible" @close="clearForm()" width="50rem">
         <el-form :model="customerRoomForm" :rules="rules" ref="customerRoomFormRef">
-          <el-form-item label="姓名:" :label-width="formLabelWidth" prop="customerName">
-            <el-input v-model="customerRoomForm.customerName" autocomplete="off" style="width: 10rem;"></el-input>
-          </el-form-item>
-          <el-form-item label="性别:" :label-width="formLabelWidth" prop="sex">
-            <el-select v-model="customerRoomForm.sex" placeholder="请选择性别" style="width: 10rem;">
-              <el-option
-                v-for="item in sexs"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="手机号:" :label-width="formLabelWidth" prop="customerPhone">
-            <el-input v-model.number.trim="customerRoomForm.customerPhone" autocomplete="off" style="width: 15rem;"></el-input>
-          </el-form-item>
-          <el-form-item label="身份证号:" :label-width="formLabelWidth" prop="customerIdNumber">
-            <el-input v-model="customerRoomForm.customerIdNumber" autocomplete="off" style="width: 15rem;"></el-input>
-          </el-form-item>
-          <el-form-item label="入住时间:" :label-width="formLabelWidth" prop="startDate" >
-            <el-date-picker
-              v-model="customerRoomForm.startDate"
-              type="date"
-              placeholder="选择日期"
-              style="width: 15rem;">
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="退房时间:" :label-width="formLabelWidth" prop="endDate">
-            <el-date-picker
-              v-model="customerRoomForm.endDate"
-              type="date"
-              placeholder="选择日期"
-              style="width: 15rem;">
-            </el-date-picker>
-          </el-form-item>
+         <el-row>
+           <el-col :span="12">
+             <el-form-item label="姓名:" :label-width="formLabelWidth" prop="customerName">
+               <el-input v-model="customerRoomForm.customerName" autocomplete="off" style="width: 10rem;"></el-input>
+             </el-form-item>
+             <el-form-item label="性别:" :label-width="formLabelWidth" prop="sex">
+               <el-select v-model="customerRoomForm.sex" placeholder="请选择性别" style="width: 10rem;">
+                 <el-option
+                   v-for="item in sexs"
+                   :key="item.value"
+                   :label="item.label"
+                   :value="item.value">
+                 </el-option>
+               </el-select>
+             </el-form-item>
+             <el-form-item label="手机号:" :label-width="formLabelWidth" prop="customerPhone">
+               <el-input v-model.number.trim="customerRoomForm.customerPhone" autocomplete="off" style="width: 15rem;"></el-input>
+             </el-form-item>
+             <el-form-item label="身份证号:" :label-width="formLabelWidth" prop="customerIdNumber">
+               <el-input v-model="customerRoomForm.customerIdNumber" autocomplete="off" style="width: 15rem;"></el-input>
+             </el-form-item>
+             <el-form-item label="入住时间:" :label-width="formLabelWidth" prop="startDate" >
+               <el-date-picker
+                 v-model="customerRoomForm.startDate"
+                 type="date"
+                 placeholder="选择日期"
+                 style="width: 15rem;">
+               </el-date-picker>
+             </el-form-item>
+             <el-form-item label="退房时间:" :label-width="formLabelWidth" prop="endDate">
+               <el-date-picker
+                 v-model="customerRoomForm.endDate"
+                 type="date"
+                 placeholder="选择日期"
+                 style="width: 15rem;">
+               </el-date-picker>
+             </el-form-item>
+           </el-col>
+           <el-col :span="12">
+             <el-form-item label="图片:" prop="src">
+               <el-image
+                 style="width: 300px; height: 300px"
+                 :src="customerRoomForm.src"
+                 fit="fit"
+                 alt="暂无图片"
+               ></el-image>
+             </el-form-item>
+             <el-form-item label="房间价格:" prop="roomPrice">
+               <div>{{ this.customerRoomForm.roomPrice }}</div>
+             </el-form-item>
+           </el-col>
+         </el-row>
+
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="resetForm()">重 置</el-button>
@@ -69,9 +87,11 @@
           <el-col v-for="(v,i) in orooms" :key="i" :span="2">
             <el-button class="r el-icon-s-home"  @click="openRoomUI(v)" v-if="!isRoomIdInboRoomList(v.roomId)">
               {{ v.roomName }}
+              <div>价格: {{ v.roomPrice }}</div>
             </el-button>
             <el-button class="r el-icon-s-home activeState" @click="exitRoomUI(v)" v-else>
               {{ v.roomName }}
+              <div>已 开</div>
             </el-button>
           </el-col>
         </el-row>
@@ -94,7 +114,8 @@
 <script>
 import roomApi from '@/api/room'
 import customerroomApi from "@/api/customerroom"
-import customerApi from "@/api/customer";
+import customerApi from "@/api/customer"
+import orderfromApi from '@/api/orderfrom'
 
 export default {
   data() {
@@ -156,6 +177,7 @@ export default {
         label: '其它'
       }],
       customerRoomForm: {
+        id: null,
         startDate: null,
         endDate: null,
         sex: '',
@@ -163,7 +185,8 @@ export default {
         customerName: null,
         customerIdNumber: null,
         customerPhone: null,
-        roomName: null
+        roomName: null,
+        roomPrice: null
       },
       Customer: {},
       customerRoom: {},
@@ -221,13 +244,19 @@ export default {
                 this.dialogFormVisible = false
               })
               // 添加开房订单 2023年12月12日
-              roomApi.getRoomById(this.customerRoomForm.roomId).then(rep => {
+              roomApi.getRoomById(this.customerRoom.roomId).then(async rep => {
                 const roomPrice = rep.data.roomPrice
-                // console.log(this.customerRoom.endDate.getTime())
-                // console.log(this.customerRoom.startDate.getTime())
-                const date = (this.customerRoom.endDate - this.customerRoom.startDate) / (1000 * 60 * 60 * 24)
-                const income = (roomPrice * date + '收入')
-                console.log(income)
+                console.log('房间id:' + this.customerRoom.roomId)
+                const date = ((this.customerRoom.endDate - this.customerRoom.startDate) / (1000 * 60 * 60 * 24))
+                const income = (roomPrice * date)
+                // 获取到订单的ID
+                const rep1 = await customerroomApi.getCustomerRoomByRoomId(this.customerRoom.roomId)
+                const order_number = rep1.data.id
+                console.log(income, order_number)
+                // 导入后台
+                orderfromApi.addOrder(income, order_number).then(rep2 => {
+                  this.$message.success('订单创建成功')
+                })
               })
             } else {
               console.log('顾客信息添加失败')
@@ -251,6 +280,7 @@ export default {
     openRoomUI(v) {
       this.customerRoomTitle = '房间:' + v.roomName
       this.customerRoomForm.roomId = v.roomId
+      this.customerRoomForm.roomPrice = v.roomPrice
       this.dialogFormVisible = true
       // 返回roomId
       console.log(v.roomId)
@@ -258,13 +288,15 @@ export default {
     exitRoomUI(v) {
       this.searchModel.pageNo = 1
       customerroomApi.getCustomerRoomByRoomId(v.roomId).then(rep => {
-        this.customerRoom.id = rep.data.customerRoom[0].id
+        this.customerRoom = rep.data
+        console.log(this.customerRoom)
       })
       this.dialogVisible = true
-      // console.log(this.customerRoom.id)
     },
     async outRoom() {
       this.searchModel.pageNo = 1
+      // 获取当前房间的表单
+
       await customerroomApi.outRoom(this.customerRoom).then(rep => {
         console.log('退房成功')
         this.$alert(rep.message, '提示', {

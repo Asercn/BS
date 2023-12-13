@@ -32,14 +32,14 @@ public class CustomerRoomController {
     private ICustomerRoomService customerRoomService;
 
     // 根据房间ID查询开房的信息
-    @ApiOperation("根据房间ID查询开房的信息")
+    @ApiOperation("根据房间ID查询最新的开房的信息")
     @GetMapping("/{roomId}")
     public Result<?> getCustomerRoomByRoomId(@PathVariable(value = "roomId")Integer roomId){
         LambdaQueryWrapper<CustomerRoom> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(roomId != null, CustomerRoom::getRoomId, roomId);
         wrapper.orderByDesc(CustomerRoom::getEndDate);
-        Map<String,Object> data = new HashMap<>();
-        data.put("customerRoom",customerRoomService.list(wrapper));
+        List<CustomerRoom> list = customerRoomService.list(wrapper);
+        CustomerRoom data = list.isEmpty() ? null : list.get(0);
         return Result.success(data,"查询成功");
     }
 
@@ -52,6 +52,7 @@ public class CustomerRoomController {
     }
 
 
+    @ApiOperation("增加开房记录订单")
     @PostMapping
     public Result<?> addCustomerRoom(@RequestBody CustomerRoom customerRoom){
         // 纠正一些错误
@@ -68,8 +69,11 @@ public class CustomerRoomController {
     @ApiOperation("根据开房的订单号来退房")
     public Result<?> outRoom(@RequestBody CustomerRoom customerRoom){
         LocalDate currentDate = LocalDate.now();
-        System.out.println(currentDate);
-        customerRoom.setStartDate(null); // 补丁
+        if (customerRoom.getStartDate() != null && customerRoom.getStartDate().compareTo(currentDate) > 0) {
+            customerRoom.setStartDate(currentDate); // 补丁2
+        } else {
+            customerRoom.setStartDate(null); // 补丁1
+        }
         customerRoom.setEndDate(currentDate);
         customerRoomService.updateById(customerRoom);
         return Result.success("退房成功");
