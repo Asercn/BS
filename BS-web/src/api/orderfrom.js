@@ -11,5 +11,17 @@ export default {
       method: 'post',
       data: orderfrom
     })
+  },
+  getOrderfrom(searchModel) {
+    return request({
+      url: 'orderfrom/getorder',
+      method: 'get',
+      params: {
+        pageNo: searchModel.pageNo,
+        pageSize: searchModel.pageSize,
+        orderNumber: searchModel.orderNumber,
+        date: searchModel.date
+      }
+    })
   }
 }

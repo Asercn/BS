@@ -4,7 +4,7 @@ export default {
   getAllMenu() {
     return request({
       url: '/menu',
-      methods: 'get'
+      method: 'get'
     })
   }
 }
