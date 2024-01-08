@@ -23,5 +23,11 @@ export default {
         date: searchModel.date
       }
     })
+  },
+  getIncome() {
+    return request({
+      url: 'orderfrom/getIncome',
+      method: 'get'
+    })
   }
 }

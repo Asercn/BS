@@ -101,6 +101,7 @@ export default {
       this.searchModel.customerName = null
       this.searchModel.roomName = null
       this.searchModel.customerPhone = null
+      this.getCustomer()
     },
     async outRoom() {
       this.searchModel.pageNo = 1

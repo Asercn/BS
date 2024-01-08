@@ -32,9 +32,6 @@
       </el-card>
 <!--      <el-card>-->
 <!--        <p style="font-weight: bold;">今日营业额</p>-->
-<!--        <el-table></el-table>-->
-<!--        <el-table-column label="收入" prop="">1</el-table-column>-->
-<!--        <el-table-column></el-table-column>-->
 <!--      </el-card>-->
 
       <el-card>

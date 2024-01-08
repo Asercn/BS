@@ -9,11 +9,18 @@
     <el-button @click="reset">重 置</el-button>
   </el-card>
   <el-card>
+    <h4 style="color: #f9ca24">今日收入: {{ DIncome }}元</h4>
+    <el-divider></el-divider>
+    <span><h5>本月收入: {{ MIncome }}元</h5>
+      <h5>今年收入: {{ YIncome }}元</h5></span>
+
+  </el-card>
+  <el-card>
     <el-table :data="orderfromForm">
-      <el-table-column type="index" label="#"></el-table-column>
-      <el-table-column prop="orderNumber" label="订单号"></el-table-column>
-      <el-table-column prop="income" label="收入(元)"></el-table-column>
-      <el-table-column prop="date" label="日期">
+      <el-table-column type="index" label="#" width="200"></el-table-column>
+      <el-table-column prop="orderNumber" label="订单号" width="200"></el-table-column>
+      <el-table-column prop="income" label="收入(元)" width="200"></el-table-column>
+      <el-table-column prop="date" label="日期" align="center">
         <template slot-scope="{ row }">
           {{ formatDate(row.date) }}
         </template>
@@ -38,6 +45,9 @@ import orderfromApi from "@/api/orderfrom";
 export default {
   data() {
     return {
+      DIncome: null,
+      MIncome: null,
+      YIncome: null,
       orderfromForm: [],
       total: null,
       searchModel: {
@@ -63,21 +73,26 @@ export default {
       this.pageNo = pageNo
       this.getOrderfrom()
     },
+    todayIncome() {
+      orderfromApi.getIncome().then(rep => {
+        this.DIncome = rep.data.DIncome
+        this.MIncome = rep.data.MIncome
+        this.YIncome = rep.data.YIncome
+      })
+    },
     formatDate(dateArray) {
       if (!dateArray || dateArray.length !== 6) {
         return ''
       }
-      const localDateTime = new Date(...dateArray)
+      const [year, month, day, hour, minute, second] = dateArray
+      const date = new Date(year, month - 1, day, hour, minute, second)
       const formattedDate =
-        localDateTime.getFullYear() +
-        '年' +
-        this.padZero(localDateTime.getMonth() + 1) +
-        '月' +
-        this.padZero(localDateTime.getDate()) +
-        '日 ' +
-        this.padZero(localDateTime.getHours()) +
-        ':' +
-        this.padZero(localDateTime.getMinutes())
+        `${date.getFullYear()}年
+        ${this.padZero(date.getMonth() + 1)}月
+        ${this.padZero(date.getDate())}日
+        ${this.padZero(date.getHours())}:
+        ${this.padZero(date.getMinutes())}:
+        ${this.padZero(date.getSeconds())}`
       return formattedDate
     },
     padZero(value) {
@@ -91,6 +106,7 @@ export default {
   },
   created() {
     this.getOrderfrom()
+    this.todayIncome()
   }
 }
 </script>

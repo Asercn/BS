@@ -316,6 +316,7 @@ export default {
     },
     reset() {
       this.searchModel.roomname = null
+      this.getRoomList()
     },
     clearForm() {
       this.customerRoomForm = {} // 清除表单信息

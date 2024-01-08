@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.util.DateUtils;
 import com.as200.bsbd.common.vo.Result;
 import com.as200.bsbd.sys.entity.Orderfrom;
 import com.as200.bsbd.sys.service.IOrderfromService;
+import com.as200.bsbd.sys.service.impl.OrderfromServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import freemarker.template.utility.DateUtil;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -74,6 +76,20 @@ public class OrderfromController {
         data.put("total", page.getTotal());
 
         return Result.success(data, "查询成功");
+    }
+
+    @ApiOperation("获取收入")
+    @GetMapping("/getIncome")
+    public Result<?> getTodayIncome() {
+        Map<String, BigDecimal> data = new HashMap<>();
+        BigDecimal DIncome = orderfromService.getTodayIncome();
+        BigDecimal MIncome = orderfromService.getMonthIncome();
+        BigDecimal YIncome = orderfromService.getYearIncome();
+        data.put("DIncome", DIncome);
+        data.put("MIncome", MIncome);
+        data.put("YIncome", YIncome);
+
+        return Result.success(data);
     }
 
 }
