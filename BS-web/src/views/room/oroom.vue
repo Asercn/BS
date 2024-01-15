@@ -84,7 +84,7 @@
       </el-dialog>
       <div>
         <el-row>
-          <el-col v-for="(v,i) in orooms" :key="i" :span="2">
+          <el-col v-for="(v,i) in orooms" :key="i" span="2">
             <el-button class="r el-icon-s-home"  @click="openRoomUI(v)" v-if="!isRoomIdInboRoomList(v.roomId)">
               {{ v.roomName }}
               <div>价格: {{ v.roomPrice }}</div>
