@@ -17,18 +17,17 @@
             <el-form-item label="上级菜单(最上级为0)" prop="parentId"><el-input-number v-model="menuForm.parentId" :min="0"></el-input-number></el-form-item>
             <el-form-item label="新菜单名称" prop="title"><el-input v-model="menuForm.title"></el-input></el-form-item>
             <el-form-item label="name" prop="name"><el-input v-model="menuForm.name"></el-input></el-form-item>
-            <el-form-item label="路径名" prop="path"><el-input v-model="menuForm.path"></el-input></el-form-item>
+<!--            <el-form-item label="路径名" prop="path"><el-input v-model="menuForm.path"></el-input></el-form-item>-->
           </el-col>
           <el-col :span="12">
             <el-form-item label="定向到(父级填写)" prop="redirect"><el-input v-model="menuForm.redirect"></el-input></el-form-item>
             <el-form-item label="图标" prop="icon"><el-input v-model="menuForm.icon"></el-input></el-form-item>
           </el-col>
         </el-row>
-
       </el-form>
       <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false" >取 消</el-button>
-      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      <el-button type="primary" @click="saveForm">确 定</el-button>
       </span>
     </el-dialog>
 <!--    获取MenuList-->
@@ -78,10 +77,10 @@ export default {
         ],
         name: [
           { required: true, message: '请输入name', trigger: 'blur' }
-        ],
-        path: [
-          { required: true, message: '请输入路径名', trigger: 'blur' }
         ]
+        // path: [
+        //   { required: true, message: '请输入路径名', trigger: 'blur' }
+        // ]
       }
     }
   },
@@ -95,8 +94,21 @@ export default {
       this.dialogVisible = true
     },
     clearForm() {
-      this.menuForm = [] // 清楚表单信息
+      this.menuForm = {} // 清楚表单信息
       this.$refs.menuFormRef.clearValidate() // 清楚表单校验结果
+    },
+    saveForm() {
+      this.$refs.menuFormRef.validate(valid => {
+        if (valid) {
+          console.log("提交后台")
+          menuApi.addMenu(this.menuForm).then(rep => {
+            this.$alert(rep.message, '提示', {
+              confirmButtonText: '确定'
+            })
+          })
+          this.getAllMenu()
+        }
+      })
     }
   },
   created() {
