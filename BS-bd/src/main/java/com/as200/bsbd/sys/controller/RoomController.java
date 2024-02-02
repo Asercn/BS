@@ -9,11 +9,16 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import freemarker.template.utility.StringUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +50,7 @@ public class RoomController {
         data.put("total", page.getTotal());
         return Result.success(data, "查询成功");
     }
-    // 查询房间
+    @ApiOperation("根据三个选项查询开房记录")
     @GetMapping("/list")
     public Result<Map<String, Object>> selectRoom(@RequestParam(value = "roomName", required = false) String roomName,
                                                   @RequestParam(value = "pageNo") Long pageNo,
@@ -70,6 +75,7 @@ public class RoomController {
     }
 
     // 新增房间
+    @ApiOperation("新增房间")
     @PostMapping
     public Result<List<Room>> addRoom(@RequestBody Room room){
         roomService.save(room);
@@ -95,6 +101,38 @@ public class RoomController {
     public Result<?> deleteRoom(@PathVariable(value = "roomId") Integer roomId){
         roomService.removeById(roomId);
         return Result.success("删除成功");
+    }
+
+    @Value("${bs-config.web-path1}")
+    private String webPath;
+
+    @ApiOperation("上传图片")
+    @PostMapping("/upImage")
+    public Result<?> upImage(@RequestParam(value = "file", required = false)MultipartFile file) {
+        // 判断文件是否为空
+        if (file.isEmpty()){
+            return Result.fail("文件上传失败");
+        }
+        // 获取传过来的文件名字
+        String Originalfilename = file.getOriginalFilename();
+        // 防止重名覆盖，获取系统时间戳+原始文件的后缀名
+        String filename = System.currentTimeMillis()+"."+Originalfilename.substring(Originalfilename.lastIndexOf(".")+1);
+//        String filename = file.getOriginalFilename();
+        // 设置保存地址
+        String path = webPath;
+        File dest = new File(path+filename);
+        // 判断文件夹是否存在
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();
+        }
+        try {
+            // 上传文件
+            file.transferTo(dest);
+            return Result.success(filename, "文件"+ filename +"上传成功");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 

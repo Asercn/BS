@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.github.oshi:oshi-core:6.4.6">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Mavenresource/repository/com/github/oshi/oshi-core/6.4.6/oshi-core-6.4.6.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../Mavenresource/repository/com/github/oshi/oshi-core/6.4.6/oshi-core-6.4.6-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../Mavenresource/repository/com/github/oshi/oshi-core/6.4.6/oshi-core-6.4.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

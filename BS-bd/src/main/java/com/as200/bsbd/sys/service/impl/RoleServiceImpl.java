@@ -62,8 +62,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
                 roleMenuMapper.insert(new RoleMenu(null, role.getRoleId(), menuId));
             }
         }
-
-
     }
 
     @Override

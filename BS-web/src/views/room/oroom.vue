@@ -52,8 +52,8 @@
            <el-col :span="12">
              <el-form-item label="图片:" prop="src">
                <el-image
-                 style="width: 300px; height: 300px"
-                 :src="customerRoomForm.src"
+                 style="max-height: 300px;"
+                 :src="'/home_images/' + customerRoomForm.roomPicture"
                  fit="fit"
                  alt="暂无图片"
                ></el-image>
@@ -82,20 +82,53 @@
         <el-button type="primary" @click="outRoom()">确 定</el-button>
       </span>
       </el-dialog>
-      <div>
-        <el-row>
-          <el-col v-for="(v,i) in orooms" :key="i" span="2">
-            <el-button class="r el-icon-s-home"  @click="openRoomUI(v)" v-if="!isRoomIdInboRoomList(v.roomId)">
-              {{ v.roomName }}
-              <div>价格: {{ v.roomPrice }}</div>
-            </el-button>
-            <el-button class="r el-icon-s-home activeState" @click="exitRoomUI(v)" v-else>
-              {{ v.roomName }}
-              <div>已 开</div>
-            </el-button>
-          </el-col>
-        </el-row>
-      </div>
+      <el-tabs type="border-card">
+        <el-tab-pane label="网格风格">
+          <span><h4>网格</h4></span>
+          <el-row class="flex-container">
+            <el-col>
+              <el-button
+                v-for="(v,i) in orooms"
+                :key="i"
+                :span="3"
+                class="r el-icon-s-home"
+                @click="openRoomUI(v)"
+                v-if="!isRoomIdInboRoomList(v.roomId)">
+                {{ v.roomName }}
+                <div>价格: {{ v.roomPrice }}</div>
+              </el-button>
+              <el-button class="r el-icon-s-home activeState" @click="exitRoomUI(v)" v-else>
+                {{ v.roomName }}
+                <div>已 开</div>
+              </el-button>
+            </el-col>
+          </el-row>
+
+        </el-tab-pane>
+        <el-tab-pane label="列表风格">
+          <span><h4>列表</h4></span>
+          <!--      测试部分-->
+          <el-table :data="orooms">
+            <el-table-column type="index" label="#"></el-table-column>
+            <el-table-column prop="roomName" label="房间号" width="100" align="center"></el-table-column>
+            <el-table-column prop="roomPicture" label="房间图片" align="center">
+              <template slot-scope="scope">
+                <el-image
+                  style="max-width: 100px; max-height: 100px;"
+                  :src="'/home_images/' + scope.row.roomPicture"></el-image>
+              </template>
+            </el-table-column>
+            <el-table-column prop="roomPrice" label="房间价格" align="center"></el-table-column>
+            <el-table-column prop="roomType" label="房间类型"></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button size="small" @click="openRoomUI(scope.row)" type="primary" v-if="!isRoomIdInboRoomList(scope.row.roomId)">订 房</el-button>
+                <el-button size="small" @click="exitRoomUI(scope.row)" type="danger" v-else>退 房</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
 
       <!--        分页-->
       <el-pagination
@@ -281,6 +314,7 @@ export default {
       this.customerRoomTitle = '房间:' + v.roomName
       this.customerRoomForm.roomId = v.roomId
       this.customerRoomForm.roomPrice = v.roomPrice
+      this.customerRoomForm.roomPicture = v.roomPicture
       this.dialogFormVisible = true
       // 返回roomId
       console.log(v.roomId)
@@ -354,15 +388,19 @@ export default {
 </script>
 
 <style scoped>
+.flex-container{
 
+}
 .r {
-  width: 7rem;
-  height: 7rem;
-  margin: 10px;
+  width: 10em;
+  height: 10em;
+  margin-bottom: 15px;
+  margin-left: 0;
+  margin-right: 10px;
 }
 
 .r::before {
-  font-size: 150%;
+  font-size: 120%;
 }
 
 .activeState {

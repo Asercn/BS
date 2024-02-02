@@ -34,8 +34,9 @@ router.beforeEach(async(to, from, next) => {
         try {
           // get user info
           await store.dispatch('user/getInfo')
+          const sortedMenuList = sortMenuList(store.getters.menuList);
           // 路由转换
-          let myRoutes = myFilterAsyncRoutes(store.getters.menuList)
+          let myRoutes = myFilterAsyncRoutes(sortedMenuList)
 
           // 404
           myRoutes.push({
@@ -77,7 +78,7 @@ router.afterEach(() => {
   // finish progress bar
   NProgress.done()
 })
-
+// 动态路由导入
 function myFilterAsyncRoutes(menuList) {
   menuList.filter(menu => {
     if (menu.component === 'Layout') {
@@ -93,5 +94,18 @@ function myFilterAsyncRoutes(menuList) {
     }
     return true
   })
+  return menuList
+}
+
+// 对菜单进行排序
+function sortMenuList(menuList) {
+  // 排序方法
+  menuList.sort((a, b) => a.number - b.number)
+  for (const menu of menuList) {
+    if (menu.children && menu.children.length) {
+      // 递归处理子菜单
+      menu.children = sortMenuList(menu.children)
+    }
+  }
   return menuList
 }

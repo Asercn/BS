@@ -90,6 +90,7 @@ export default {
           data.start_date = new Date(data.start_date).toLocaleDateString('zh-CN')
         })
         this.total = rep.data.total
+        this.searchModel.pageNo = 1
       })
     },
     openOutRoomDialog(row) {

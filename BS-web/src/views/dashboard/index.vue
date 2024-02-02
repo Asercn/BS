@@ -30,9 +30,9 @@
           </ul>
         </div>
       </el-card>
-<!--      <el-card>-->
-<!--        <p style="font-weight: bold;">今日营业额</p>-->
-<!--      </el-card>-->
+      <el-card>
+        <span>通知</span>
+      </el-card>
 
       <el-card>
         <el-collapse>

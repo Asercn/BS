@@ -7,14 +7,14 @@ export default {
       orderNumber: orderNumber
     }
     return request({
-      url: 'orderfrom/add',
+      url: '/orderfrom/add',
       method: 'post',
       data: orderfrom
     })
   },
   getOrderfrom(searchModel) {
     return request({
-      url: 'orderfrom/getorder',
+      url: '/orderfrom/getorder',
       method: 'get',
       params: {
         pageNo: searchModel.pageNo,
@@ -26,7 +26,7 @@ export default {
   },
   getIncome() {
     return request({
-      url: 'orderfrom/getIncome',
+      url: '/orderfrom/getIncome',
       method: 'get'
     })
   }

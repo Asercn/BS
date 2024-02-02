@@ -37,6 +37,7 @@ public class Menu implements Serializable {
     private Integer parentId;
     private String isLeaf;
     private Integer hidden;
+    private Integer number;
 
     @TableField(exist = false)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

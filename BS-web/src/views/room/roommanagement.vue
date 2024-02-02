@@ -21,6 +21,18 @@
             <el-form-item label="房间类型" :label-width="formLabelWidth">
               <el-input v-model="roomForm.roomType" autocomplete="off" class="inputWidth"></el-input>
             </el-form-item>
+            <el-form-item label="房间图片" :label-width="formLabelWidth" prop="roomPicture">
+              <el-image style="height: 300px;width: 300px;" :src="'/home_images/' + roomForm.roomPicture"></el-image>
+              <el-upload
+                action="http://localhost:9998/room/upImage"
+                :on-success="handle_success"
+                :show-file-list="false"
+                ref="imageUpload"
+                :before-upload="beforeAvatarUpload">
+              <el-button>上传图片</el-button>
+<!--                <i class="el-icon-plus"></i>-->
+              </el-upload>
+            </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -33,6 +45,11 @@
       <el-divider/>
       <el-table :data="roomData">
         <el-table-column type="index" label="#" align="left" width="180px"></el-table-column>
+        <el-table-column label="房间照片" align="center">
+          <template scope="scope">
+            <el-image style="width: 100px;height:100px;" :src="'/home_images/'+ scope.row.roomPicture" alt=""></el-image>
+          </template>
+        </el-table-column>
         <el-table-column prop="roomName" label="房间名" align="center"></el-table-column>
         <el-table-column prop="roomPrice" label="房价"></el-table-column>
         <el-table-column prop="roomType" label="房间类型" align="center"></el-table-column>
@@ -63,6 +80,7 @@ import roomApi from '@/api/room'
 export default {
   data() {
     return {
+
       rules: {
         roomName: [
           { required: true, message: '请输入房间名', trigger: 'blur' }
@@ -75,9 +93,7 @@ export default {
       roomTotal: null,
       formLabelWidth: '7rem',
       roomForm: {
-        roomName: null,
-        roomPrice: null,
-        roomType: null
+        roomPicture: ''
       },
       dialogFormVisible: false,
       total: null,
@@ -90,6 +106,17 @@ export default {
     }
   },
   methods: {
+    beforeAvatarUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isLt2M
+    },
+    handle_success(res) {
+      console.log(res.data)
+      return (this.roomForm.roomPicture = res.data)
+    },
     getRoomList() {
       this.searchModel.pageNo = 1
       console.log(this.searchModel.roomname)
@@ -121,10 +148,10 @@ export default {
     saveRoomForm() {  // 表单验证
       this.$refs.roomFormref.validate(vaild => {
         if (vaild) {  // 验证通过
+          console.log('图片名:' + this.roomForm.roomPicture)
           // 提交后台
           roomApi.saveRoom(this.roomForm).then(rep => {
             // 提交成功提示
-
             this.$message({
               message: rep.message,
               type: "success"
@@ -175,6 +202,9 @@ export default {
   },
   created() {
     this.getRoomData()
+  },
+  computed: {
+
   }
 }
 </script>
@@ -189,4 +219,5 @@ export default {
 .buttonRow>button{
   margin-left: 1rem;
 }
+
 </style>

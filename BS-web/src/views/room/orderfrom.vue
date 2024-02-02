@@ -26,16 +26,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="searchModel.pageNo"
+      :page-size="searchModel.pageSize"
+      :page-sizes="[10, 20, 50, 100]"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
   </el-card>
-  <el-pagination
-    @size-change="handleSizeChange"
-    @current-change="handleCurrentChange"
-    :current-page="searchModel.pageNo"
-    :page-size="searchModel.pageSize"
-    :page-sizes="[10, 20, 50, 100]"
-    layout="total, sizes, prev, pager, next, jumper"
-    :total="total">
-  </el-pagination>
 </el-main>
 </template>
 
@@ -61,16 +61,17 @@ export default {
   methods: {
     getOrderfrom() {
       orderfromApi.getOrderfrom(this.searchModel).then(rep => {
-        this.total = rep.data.total
         this.orderfromForm = rep.data.rows
+        this.total = rep.data.total
+        this.searchModel.pageNo = 1
       })
     },
     handleSizeChange(pageSize) {
-      this.pageSize = pageSize
+      this.searchModel.pageSize = pageSize
       this.getOrderfrom()
     },
     handleCurrentChange(pageNo) {
-      this.pageNo = pageNo
+      this.searchModel.pageNo = pageNo
       this.getOrderfrom()
     },
     todayIncome() {

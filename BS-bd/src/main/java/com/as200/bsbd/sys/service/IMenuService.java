@@ -18,4 +18,9 @@ public interface IMenuService extends IService<Menu> {
     List<Menu> getAllMenu();
 
     List<Menu> getMenuListByUserId(Integer userId);
+
+
+    void deleteMenu(Integer menuId);
+
+    void createMenu(Menu menu);
 }

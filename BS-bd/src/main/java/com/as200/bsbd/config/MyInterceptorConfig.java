@@ -39,7 +39,8 @@ public class MyInterceptorConfig implements WebMvcConfigurer {
                         "/orderfrom/add",
                         "/swagger-ui/**",
                         "/swagger-resources/**",
-                        "/v3/**"
+                        "/v3/**",
+                        "/assets/**"
                 );
 
     }

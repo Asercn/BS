@@ -135,6 +135,7 @@ export default {
               type: "success"
             })
             this.dialogFormVisible = false
+            this.$forceUpdate()
             this.getRoleList()
           })
         } else {  // 验证失败

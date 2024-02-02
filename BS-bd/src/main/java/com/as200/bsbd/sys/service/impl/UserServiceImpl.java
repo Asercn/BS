@@ -57,7 +57,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //        warpper.eq(User::getPassword, user.getPassword());
         User loginUser = this.baseMapper.selectOne(warpper);
 //        不为空则生成token，并将用户信息存入redis
-        // 不为空且数据库密码和传入的密码相同
+        // 不为空不被禁用且数据库密码和传入的密码相同
         if (loginUser != null && passwordEncoder.matches(user.getPassword(), loginUser.getPassword())){
 //            生成token
             // 方案1
@@ -65,7 +65,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //            存入redis
 //            loginUser.setPassword(null);
 //            redisTemplate.opsForValue().set(key, loginUser, 720, TimeUnit.MINUTES);
-
 
             // 方案2
 //            创建jwt
@@ -89,7 +88,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (loginUser != null){
+        if (loginUser != null && loginUser.getState().equals("1")){
 //            User loginUser = JSON.parseObject(JSON.toJSONString(obj), User.class);
             Map<String, Object> data = new HashMap<>();
             data.put("id", loginUser.getId());

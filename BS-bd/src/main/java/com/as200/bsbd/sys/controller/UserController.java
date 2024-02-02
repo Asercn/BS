@@ -44,10 +44,11 @@ public class UserController {
     @PostMapping("/login")
     public Result<Map<String, Object>> login (@RequestBody User user){
         Map<String, Object> data = userService.login(user);
-        if (!data.isEmpty()){
+        if (data != null && !data.isEmpty()){
             return Result.success(data);
+        } else {
+            return Result.fail(20002,"用户名或密码错误");
         }
-        return Result.fail(20002,"用户名或密码错误");
     }
 
     @ApiOperation("获取用户的登入信息")
@@ -55,10 +56,10 @@ public class UserController {
     public Result<Map<String, Object>> info(@RequestParam("token") String token){
 
         Map<String, Object> data = userService.getUserInfo(token);
-        if (!data.isEmpty()){
+        if (data != null && !data.isEmpty()){
             return Result.success(data);
         }
-        return Result.fail(20003,"用户登入信息无效，请重新登入");
+        return Result.fail(20003,"用户登入信息无效或者用户被禁用，请重新登入");
     }
     @ApiOperation("登出方法")
     @PostMapping("/logout")

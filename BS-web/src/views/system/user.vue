@@ -29,6 +29,9 @@
         <el-form-item label="电话号码" :label-width="formLabelWidth" prop="phone">
           <el-input v-model.number="userForm.phone" autocomplete="off" class="inputWidth"></el-input>
         </el-form-item>
+        <el-form-item label="状态" prop="state" :label-width="formLabelWidth" >
+          <el-switch v-model="userForm.state" active-value="1" active-text="启用" active-color="#13ce66" inactive-value="-1"  inactive-text="禁用">1</el-switch>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -45,7 +48,7 @@
       <el-table-column prop="phone" label="电话号码"></el-table-column>
       <el-table-column prop="state" label="状态" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.state == 1" type="success" >启用</el-tag>
+          <el-tag v-if="scope.row.state === '1'" type="success" >启用</el-tag>
           <el-tag v-else type="danger" >禁用</el-tag>
         </template>
       </el-table-column>
@@ -115,7 +118,8 @@ export default {
         role_desc: null,
         email: null,
         phone: null,
-        role_id: null
+        role_id: null,
+        state: '1'
       },
       userTitle: 'title',
       dialogFormVisible: false,
@@ -186,8 +190,8 @@ export default {
       this.$refs.userFormref.clearValidate()
     },
     openEditUI(row) {
-      this.dialogFormVisible = true
       getUserInfoOrByUserID(row.id).then(rep => {
+        this.dialogFormVisible = true
         this.userForm = rep.data
         this.userTitle = '用户' + rep.data.username
       })

@@ -16,6 +16,9 @@ import '@/icons' // icon
 import '@/permission' // permission control
 
 import axios from 'axios'
+import ECharts from 'vue-echarts'
+import 'echarts'
+Vue.component('ECharts', ECharts)
 
 Vue.config.productionTip = false
 // 设置默认请求地址
