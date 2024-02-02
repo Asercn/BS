@@ -42,22 +42,26 @@
               </div>
             </el-card>
           </el-col>
-          <el-col :span="24">
-            <el-card class="myCard">
+          <el-card class="myCard">
+            <el-col :span="14">
               <span><i class="el-icon-receiving"></i> 磁盘使用情况</span>
               <el-divider></el-divider>
               <ul style="list-style-type: none;">
-                <li><span>C盘: <el-progress :text-inside="true" :percentage="C" v-if="!isNaN(C)" :color="colors" :stroke-width="strokeWidth"></el-progress></span></li>
-                <li><span>F盘: <el-progress :text-inside="true" :percentage="F" v-if="!isNaN(F)" :color="colors" :stroke-width="strokeWidth"></el-progress></span></li>
-                <li><span>G盘: <el-progress :text-inside="true" :percentage="G" v-if="!isNaN(G)" :color="colors" :stroke-width="strokeWidth"></el-progress></span></li>
+                <li v-for="(Disr, index) in this.systemInfo.serverDisr" :key="index">
+                  <span>{{ Disr.disrName }}盘</span>
+                  <el-progress :text-inside="true" :percentage="useDisr(Disr.freeSpace, Disr.totalSpace)"  v-if="!isNaN(useDisr(Disr.freeSpace, Disr.totalSpace))" :color="colors" :stroke-width="strokeWidth"></el-progress>
+                </li>
               </ul>
-            </el-card>
-          </el-col>
+            </el-col>
+            <el-col :span="10" style="border-left: solid 1px #e7eaec;" class="myCard">
+              <e-charts style="height: 300px;" :option="diskOption"></e-charts>
+            </el-col>
+          </el-card>
           <el-col :span="24">
             <el-card>
               <span><i class="el-icon-odometer"></i> 内存信息</span>
               <el-divider></el-divider>
-              <e-charts style="height: 400px;" :option="option"></e-charts>
+              <e-charts style="height: 300px;" :option="lineOption"></e-charts>
               <ul>
                 <li><span>最大可用内存: {{ this.systemInfo.maxMemory/1024/1024 }} MB</span></li>
                 <li><span>总内存: {{ this.systemInfo.totalMemory/1024/1024 }} MB</span></li>
@@ -76,24 +80,13 @@
 
 <script>
 import monitorApi from '@/api/monitor'
+import axios from 'axios'
 
 export default {
   data() {
     return {
-      option: {
-        xAxis: {
-          type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: [150, 230, 224, 218, 135, 147, 260],
-            type: 'line'
-          }
-        ]
+      systemInfo: {
+        serverDisr: []
       },
       strokeWidth: 15,
       colors: [
@@ -109,7 +102,8 @@ export default {
         { color: '#2d98da', percentage: 10 }
       ],
       name: 'systeminfo',
-      systemInfo: {}
+      memoryData: [],
+      runtimeData: [1]
     }
   },
   methods: {
@@ -117,52 +111,107 @@ export default {
       monitorApi.getServerInfo().then(rep => {
         this.systemInfo = rep.data
       })
+    },
+    useDisr(freeSpace, totalSpace) {
+      const useSpace = totalSpace - freeSpace
+      return parseInt((useSpace / totalSpace * 100).toFixed(0))
+    }
+  },
+  mounted() {
+    // 每隔一秒钟获取一次数据
+    setInterval(() => {
+      this.getServerInfo()
+      const num = this.runtimeData[this.runtimeData.length - 1] + 1
+      this.runtimeData.push(num)
+      this.memoryData.push((this.systemInfo.totalMemory - this.systemInfo.freeMemory) / 1024 / 1024)
+      // 检查数组长度，如果超过10个元素，移除第一个元素
+      if (this.memoryData.length > 10) {
+        this.runtimeData.shift()
+        this.memoryData.shift()
+      }
+
+    }, 1000)
+  },
+  computed: {
+    diskOption() {
+      return {
+        title: {
+          text: '硬盘剩余空间(GB)'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          top: '5%',
+          left: 'center'
+        },
+        series: [
+          {
+            name: '硬盘剩余空间(GB)',
+            type: 'pie',
+            radius: ['40%', '60%'],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderRadius: 10,
+              borderColor: '#fff',
+              borderWidth: 2
+            },
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: 40,
+                fontWeight: 'bold'
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: this.systemInfo.serverDisr.map(d => ({ value: (d.freeSpace / 1024 / 1024 / 1024).toFixed(0), name: d.disrName + '盘' }))
+          }
+        ]
+      }
+    },
+    lineOption() {
+      return {
+        title: {
+          text: '内存使用量'
+        },
+        xAxis: {
+          type: 'category',
+          name: '时间',
+          data: this.runtimeData
+
+        },
+        yAxis: {
+          type: 'value',
+          name: '使用内存(MB)'
+        },
+        series: [
+          {
+            data: this.memoryData,
+            type: 'line',
+            areaStyle: {},
+            animation: {
+              type: 'linear',
+            }
+          }
+        ]
+      }
     }
   },
   created() {
     this.getServerInfo()
-  },
-  computed: {
-    C() {
-      const freeC = this.systemInfo['C:\\freeSpace']
-      const totalC = this.systemInfo['C:\\totalSpace']
-      const useC = totalC - freeC
-
-      if (freeC === null || totalC === null || useC === null) {
-        return 0
-      } else {
-        return parseInt((useC / totalC) * 100)
-      }
-    },
-    F() {
-      const freeF = this.systemInfo['F:\\freeSpace']
-      const totalF = this.systemInfo['F:\\totalSpace']
-      const useF = totalF - freeF
-
-      if (freeF === null || totalF === null || useF === null) {
-        return 0
-      } else {
-        return parseInt((useF / totalF) * 100)
-      }
-    },
-    G() {
-      const totalG = this.systemInfo['G:\\totalSpace']
-      const freeG = this.systemInfo['G:\\freeSpace']
-      const useG = totalG - freeG
-
-      if (freeG === null || totalG === null || useG === null) {
-        return 0
-      } else {
-        return parseInt((useG / totalG) * 100)
-      }
-    }
   }
 }
 </script>
 
 <style scoped>
 .myCard{
-  margin-bottom: 15px;
+  margin: 15px 0;
 }
 
 table td:not(:last-child) {

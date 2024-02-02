@@ -38,6 +38,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     @Autowired
     private RoleMenuMapper roleMenuMapper;
+    @Autowired
+    private MenuMapper menuMapper;
 
     @Override
     @Transactional
@@ -71,32 +73,63 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
 
     public void createMenu(Menu menu) {
-//        String filePath = "F:\\Project\\BS\\BS-web\\src\\views\\";
         String filePath = url;
         if (menu.getParentId() == 0 && menu.getComponent().equals("Layout")) {
             filePath += menu.getName().toString();
         } else {
             filePath += menu.getComponent().toString();
         }
+
         File vueFile = new File(filePath + ".vue");
+
         try {
-            // 创建文件夹
-            vueFile.mkdirs();
             // 创建文件
             if (vueFile.createNewFile()) {
                 FileWriter writer = new FileWriter(vueFile);
                 writer.write(generateVueComponent(menu.getName()));
                 writer.close();
-//                    System.out.println("Vue文件创建成功：" +
                 log.error("Vue文件创建成功：" +  vueFile.getAbsolutePath());
             } else {
-//                    System.out.println("Vue文件已存在：" + vueFile.getAbsolutePath());
-                log.error("Vue is exist" +  vueFile.getAbsolutePath());
+                log.error("Vue文件已存在：" + vueFile.getAbsolutePath());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+//        String filePath = "F:\\Project\\BS\\BS-web\\src\\views\\";
+//        String filePath = url;
+//        if (menu.getParentId() == 0 && menu.getComponent().equals("Layout")) {
+//            filePath += menu.getName().toString();
+//        } else {
+//            filePath += menu.getComponent().toString();
+//        }
+//        File vueFile = new File(filePath + ".vue");
+//        try {
+//            // 创建文件夹
+//            vueFile.mkdirs();
+//            // 创建文件
+//            if (vueFile.createNewFile()) {
+//                FileWriter writer = new FileWriter(vueFile);
+//                writer.write(generateVueComponent(menu.getName()));
+//                writer.close();
+////                    System.out.println("Vue文件创建成功：" +
+//                log.error("Vue文件创建成功：" +  vueFile.getAbsolutePath());
+//            } else {
+////                    System.out.println("Vue文件已存在：" + vueFile.getAbsolutePath());
+//                log.error("Vue is exist" +  vueFile.getAbsolutePath());
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
+
+    @Override
+    public Menu getParentMenu(Integer parentId) {
+        LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Menu::getMenuId, parentId);
+        wrapper.select(Menu::getMenuId, Menu::getParentId, Menu::getComponent, Menu::getPath, Menu::getName);
+        return menuMapper.selectOne(wrapper);
+    }
+
     private String generateVueComponent(String menuName) {
         // 生成Vue组件的内容
         return "<template>\n" +

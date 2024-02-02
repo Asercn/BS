@@ -23,4 +23,6 @@ public interface IMenuService extends IService<Menu> {
     void deleteMenu(Integer menuId);
 
     void createMenu(Menu menu);
+
+    Menu getParentMenu(Integer parentId);
 }

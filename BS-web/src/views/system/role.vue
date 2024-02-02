@@ -11,13 +11,13 @@
       <!--        dialog-->
       <el-dialog @close="clearFrom" :title="RoleTitle" :visible.sync="dialogFormVisible" width="30rem">
         <el-form :model="roleForm" :rules="rules" ref="roleFormref">
-          <el-form-item label="角色名" :label-width="formLabelWidth" prop="roleName">
+          <el-form-item label="角色名" :label-width="formLabelWidth">
             <el-input v-model="roleForm.roleName" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="角色描述" :label-width="formLabelWidth">
             <el-input v-model="roleForm.roleDesc" autocomplete="off" class="inputWidth"></el-input>
           </el-form-item>
-          <el-form-item label="权限设置" :label-width="formLabelWidth" prop="menuIdList">
+          <el-form-item label="权限设置" :label-width="formLabelWidth">
             <el-tree :data="menuList" :props="menuProps" show-checkbox node-key="menuId" ref="menuRef"></el-tree>
           </el-form-item>
         </el-form>
@@ -135,7 +135,6 @@ export default {
               type: "success"
             })
             this.dialogFormVisible = false
-            this.$forceUpdate()
             this.getRoleList()
           })
         } else {  // 验证失败

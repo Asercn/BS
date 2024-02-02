@@ -9,10 +9,18 @@
     <el-button @click="reset">重 置</el-button>
   </el-card>
   <el-card>
-    <h4 style="color: #f9ca24">今日收入: {{ DIncome }}元</h4>
-    <el-divider></el-divider>
-    <span><h5>本月收入: {{ MIncome }}元</h5>
-      <h5>今年收入: {{ YIncome }}元</h5></span>
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <h4 style="color: #f9ca24">今日收入: {{ DIncome }}元</h4>
+        <el-divider></el-divider>
+        <span><h5>本月收入: {{ MIncome }}元</h5>
+        <h5>今年收入: {{ YIncome }}元</h5></span>
+      </el-col>
+      <el-col :span="12">
+<!--        条形图-->
+        <e-charts :option="option" style="height: 250px;"></e-charts>
+      </el-col>
+    </el-row>
 
   </el-card>
   <el-card>
@@ -108,6 +116,28 @@ export default {
   created() {
     this.getOrderfrom()
     this.todayIncome()
+  },
+  computed: {
+    option() {
+      return {
+        title: {
+          text: '收入数据'
+        },
+        xAxis: {
+          type: 'category',
+          data: ['日收入', '月收入', '年收入']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            data: [this.DIncome, this.MIncome, this.YIncome],
+            type: 'bar'
+          }
+        ]
+      }
+    }
   }
 }
 </script>

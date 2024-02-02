@@ -40,6 +40,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
+    @Transactional
     public Role getRoleById(Integer id) {
         Role role = this.baseMapper.selectById(id);
         List<Integer> menuIdList = roleMenuMapper.getMenuIdByRoleId(id);

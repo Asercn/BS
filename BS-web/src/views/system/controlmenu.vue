@@ -38,17 +38,23 @@
       :tree-props="{children:'children'}"
     >
       <el-table-column prop="menuId" label="编号"></el-table-column>
-      <el-table-column prop="number" label="序号"></el-table-column>
-      <el-table-column prop="title" label="菜单名称"></el-table-column>
       <el-table-column prop="icon" label="图标" width="100">
         <template slot-scope="scope">
           <i :class="scope.row.icon"></i>
           <svg-icon :icon-class="scope.row.icon"></svg-icon>
         </template>
       </el-table-column>
+      <el-table-column prop="number" label="顺序"></el-table-column>
+      <el-table-column prop="isLeaf" label="是否子菜单" align="center">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.isLeaf=='Y'"><i class="el-icon-check"></i></el-tag>
+          <el-tag type="info" v-else>否</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="title" label="菜单名称"></el-table-column>
+      <el-table-column prop="name" label="name"></el-table-column>
       <el-table-column prop="component" label="路径" ></el-table-column>
       <el-table-column prop="redirect" label="重定向"></el-table-column>
-      <el-table-column prop="name" label="name"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button @click="openDialog(scope.row.menuId)" type="warning" size="mini" icon="el-icon-edit" circle></el-button>
@@ -133,6 +139,7 @@ export default {
               callback: () => {
                 // 异步操作完成后再刷新页面
                 this.getAllMenu()
+                // 可能会改变路由状态，所以刷新页面
                 this.$router.go(0)
               }
             })

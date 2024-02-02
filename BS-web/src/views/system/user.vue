@@ -29,8 +29,8 @@
         <el-form-item label="电话号码" :label-width="formLabelWidth" prop="phone">
           <el-input v-model.number="userForm.phone" autocomplete="off" class="inputWidth"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="state" :label-width="formLabelWidth" >
-          <el-switch v-model="userForm.state" active-value="1" active-text="启用" active-color="#13ce66" inactive-value="-1"  inactive-text="禁用">1</el-switch>
+        <el-form-item label="状态" :label-width="formLabelWidth" >
+          <el-switch v-model="userForm.state" active-value="1" active-text="启用" active-color="#13ce66" inactive-value="0"  inactive-text="禁用"></el-switch>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -186,7 +186,9 @@ export default {
       })
     },
     clearFrom() {
-      this.userForm = {}
+      this.userForm = {
+        state: '1'
+      }
       this.$refs.userFormref.clearValidate()
     },
     openEditUI(row) {

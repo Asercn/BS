@@ -29,8 +29,7 @@ import java.util.Map;
 public class MenuController {
     @Autowired
     private IMenuService menuService;
-    @Autowired
-    private MenuMapper menuMapper;
+
 
     @ApiOperation("查询所有列表")
     @GetMapping
@@ -42,13 +41,13 @@ public class MenuController {
     @ApiOperation("新增菜单")
     @PostMapping
     public Result<?> addMenu(@RequestBody Menu menu) {
-
+        // 新增的话肯定是叶子目录
+        menu.setIsLeaf("Y");
         if(menu.getIcon() == null) {
             menu.setIcon("el-icon-warning");
         }
-        String OriginPath;
         // 获取父级菜单
-        Menu parentMenu = getParentMenu(menu.getParentId());
+        Menu parentMenu = menuService.getParentMenu(menu.getParentId());
         if (menu.getParentId().equals(0)) {
             // 如果父级为0，则设置Component为Layout，Path为/拼接上name
             menu.setComponent("Layout");
@@ -57,6 +56,9 @@ public class MenuController {
             // 如果父级不为0，且有父级则根据父级的路径拼接上文件名
             menu.setComponent(parentMenu.getName() + '/' + menu.getName());
             menu.setPath(menu.getName());
+            // 设置父级的is_leaf为N
+            parentMenu.setIsLeaf("N");
+            menuService.updateById(parentMenu);
         } else {
             return Result.fail("父级菜单不存在");
         }
@@ -69,12 +71,7 @@ public class MenuController {
         return Result.success(data,"新增成功");
     }
 
-    private Menu getParentMenu(Integer parentId) {
-        LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Menu::getMenuId, parentId);
-        wrapper.select(Menu::getParentId, Menu::getComponent, Menu::getPath, Menu::getName);
-        return menuMapper.selectOne(wrapper);
-    }
+
 
 
     @ApiOperation("删除目录")
@@ -94,6 +91,15 @@ public class MenuController {
     @ApiOperation("修改目录")
     @PutMapping
     public Result<?> updateMenu(@RequestBody Menu menu) {
+        LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
+        menuService.updateById(menu);
+        // 查询自己有没有叶子目录
+        wrapper.eq(Menu::getParentId, menu.getMenuId());
+        if (menuService.list(wrapper).isEmpty()) {
+            menu.setIsLeaf("Y");
+        } else {
+            menu.setIsLeaf("N");
+        }
         menuService.updateById(menu);
         return Result.success("修改成功");
     }

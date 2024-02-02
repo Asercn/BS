@@ -8,16 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.lang.management.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 @RestController
@@ -75,11 +73,19 @@ public class MonitorController {
         data.put("JVMVendor", ManagementFactory.getRuntimeMXBean().getVmVendor());
 
         // 磁盘信息
+        List<Map<String, Object>> list = new ArrayList<>();
         File[] roots = File.listRoots();
         for (File root : roots) {
-            data.put(root.getPath() + "totalSpace", root.getTotalSpace());
-            data.put(root.getPath() + "freeSpace", root.getUsableSpace());
+            Map<String, Object> serverDisr = new HashMap<>();
+            String disrName = root.getPath();
+            disrName = disrName.substring(0, 1);
+            serverDisr.put("disrName", disrName);
+            serverDisr.put("totalSpace", root.getTotalSpace());
+            serverDisr.put("freeSpace", root.getUsableSpace());
+            list.add(serverDisr);
         }
+        data.put("serverDisr", list);
+
         return Result.success(data);
     }
 

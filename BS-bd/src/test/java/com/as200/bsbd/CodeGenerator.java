@@ -15,7 +15,7 @@ public class CodeGenerator {
         String password = "root";
         String modelName = "sys";
         String mapperLocation = "F:\\Project\\BS\\BS-bd\\src\\main\\resources\\mapper\\" + modelName;
-        String tableNames = "x_user,x_role,x_user_role,x_room,x_customer,x_customer_room,x_menu,x_role_menu,x_orderfrom";
+        String tableNames = "x_user,x_role,x_user_role,x_room,x_customer,x_customer_room,x_menu,x_role_menu,x_orderfrom,x_notice";
         FastAutoGenerator.create(url, username, password)
                 .globalConfig(builder -> {
                     builder.author("as200") // 设置作者

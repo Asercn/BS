@@ -22,7 +22,7 @@ Vue.component('ECharts', ECharts)
 
 Vue.config.productionTip = false
 // 设置默认请求地址
-axios.defaults.baseURL = 'http://192.168.31.233:9998'
+axios.defaults.baseURL = 'http://localhost:9998'
 Vue.prototype.$axios = axios
 
 /**
