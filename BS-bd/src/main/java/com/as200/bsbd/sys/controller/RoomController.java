@@ -39,7 +39,6 @@ public class RoomController {
     @Autowired
     private IRoomService roomService;
 
-
     @ApiOperation("查询所有房间信息")
     @GetMapping("/all")
     public Result<Map<String, Object>> getAllRoom(@RequestParam(value = "pageNo")Long pageNo,
