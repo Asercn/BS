@@ -62,6 +62,18 @@ export default {
       // alert('update')
       return this.updateRoom(roomForm)
     }
+  },
+  userGetRoom(searchModel, selectInfo) {
+    return request({
+      url: '/room/user',
+      method: 'get',
+      params: {
+        pageNo: searchModel.pageNo,
+        pageSize: searchModel.pageSize,
+        roomType: selectInfo.roomType,
+        roomPrice: selectInfo.roomPrice
+      }
+    })
   }
 
 }

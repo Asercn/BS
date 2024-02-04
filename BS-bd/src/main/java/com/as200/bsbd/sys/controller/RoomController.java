@@ -38,7 +38,9 @@ import java.util.Map;
 public class RoomController {
     @Autowired
     private IRoomService roomService;
-    // 查询所有房间信息
+
+
+    @ApiOperation("查询所有房间信息")
     @GetMapping("/all")
     public Result<Map<String, Object>> getAllRoom(@RequestParam(value = "pageNo")Long pageNo,
                                          @RequestParam(value = "pageSize")Long pageSize){
@@ -50,13 +52,35 @@ public class RoomController {
         data.put("total", page.getTotal());
         return Result.success(data, "查询成功");
     }
+
+    @ApiOperation("用户查询的接口")
+    @GetMapping("/user")
+    public Result<?> userGetRoom(@RequestParam(value = "pageNo")Long pageNo,
+                                 @RequestParam(value = "pageSize")Long pageSize,
+                                 @RequestParam(value = "roomType", required = false)String roomType,
+                                 @RequestParam(value = "roomPrice", required = false)Integer roomPrice) {
+        LambdaQueryWrapper<Room> wrapper = new LambdaQueryWrapper<>();
+        Page<Room> page = new Page<>(pageNo,pageSize);
+        wrapper.like(StringUtils.hasLength(roomType), Room::getRoomType, roomType);
+
+        if (roomPrice != null && roomPrice != 0) {
+            wrapper.le(Room::getRoomPrice,roomPrice);
+        }
+        roomService.page(page, wrapper);
+        Map<String, Object> data = new HashMap<>();
+        data.put("roomData", page.getRecords());
+        data.put("total", page.getTotal());
+        data.put("current",page.getCurrent());
+        return Result.success(data, "查询成功");
+    }
+
     @ApiOperation("根据三个选项查询开房记录")
     @GetMapping("/list")
     public Result<Map<String, Object>> selectRoom(@RequestParam(value = "roomName", required = false) String roomName,
                                                   @RequestParam(value = "pageNo") Long pageNo,
                                                   @RequestParam(value = "pageSize") Long pageSize){
         LambdaQueryWrapper<Room> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(StringUtils.hasLength(roomName), Room::getRoomName, roomName);
+        wrapper.like(StringUtils.hasLength(roomName), Room::getRoomName, roomName);
         wrapper.orderByAsc(Room::getRoomName);
         Page<Room> page = new Page<>(pageNo, pageSize);
         roomService.page(page, wrapper);
@@ -103,7 +127,7 @@ public class RoomController {
         return Result.success("删除成功");
     }
 
-    @Value("${bs-config.web-path1}")
+    @Value("${bs-config.web-path}")
     private String webPath;
 
     @ApiOperation("上传图片")

@@ -30,7 +30,12 @@
         <el-table :data="noticeInfo">
           <el-table-column label="ID" prop="id"></el-table-column>
           <el-table-column label="标题" prop="title"></el-table-column>
-          <el-table-column label="公告时间" prop="releaseTime"></el-table-column>
+          <el-table-column label="公告时间" prop="releaseTime">
+            <template slot-scope="{ row }">
+<!--              {{ formatDate(row.date) }}-->
+              {{  formatDate(row.releaseTime) }}
+            </template>
+          </el-table-column>
           <el-table-column label="文字" prop="text"></el-table-column>
           <el-table-column label="是否启用" prop="hidden">
             <template slot-scope="scope">
@@ -88,6 +93,19 @@ export default {
     this.getAllNotice()
   },
   methods: {
+    formatDate(dateArray) {
+      if (!dateArray || dateArray.length !== 6) {
+        return ''
+      }
+      const [year, month, day, hour, minute, second] = dateArray
+      const date = new Date(year, month - 1, day, hour, minute, second)
+      const formattedDate =
+        `${date.getFullYear()}年${this.padZero(date.getMonth() + 1)}月${this.padZero(date.getDate())}日${this.padZero(date.getHours())}:${this.padZero(date.getMinutes())}:${this.padZero(date.getSeconds())}`
+      return formattedDate
+    },
+    padZero(value) {
+      return value < 10 ? '0' + value : value
+    },
     deleteNotice(id) {
       this.$confirm(`确定删除?`, '提示', {
         confirmButtonText: '确定',

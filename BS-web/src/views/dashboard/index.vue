@@ -47,8 +47,15 @@
                   <h4>公告列表(用户也可以在此处留言)</h4>
 <!--                  新增公告列表功能-->
                   <el-collapse>
-                    <el-collapse-item v-for="(noticeInfo, i) in noticeInfos" :key="i" :title="noticeInfo.title">
-                      <div>{{ noticeInfo.text }}</div>
+                    <el-collapse-item v-for="(noticeInfo, i) in noticeInfos" :key="i" :title="`${noticeInfo.title}-(${formatDate(noticeInfo.releaseTime)})`">
+                      <el-row>
+                        <el-col :span="12">
+                          <div>{{ noticeInfo.text }}</div>
+                        </el-col>
+                        <el-col :span="12">
+                          <div></div>
+                        </el-col>
+                      </el-row>
                     </el-collapse-item>
                   </el-collapse>
                   <span></span>
@@ -133,7 +140,19 @@ export default {
     }
   },
   methods: {
-    load() {
+    formatDate(dateArray) {
+      if (!dateArray || dateArray.length !== 6) {
+        return ''
+      }
+      const [year, month, day, hour, minute, second] = dateArray
+      const date = new Date(year, month - 1, day, hour, minute, second)
+      const formattedDate =
+        `${date.getFullYear()}年
+        ${this.padZero(date.getMonth() + 1)}月${this.padZero(date.getDate())}日${this.padZero(date.getHours())}:${this.padZero(date.getMinutes())}:${this.padZero(date.getSeconds())}`
+      return formattedDate
+    },
+    padZero(value) {
+      return value < 10 ? '0' + value : value
     },
     getRoomInfo() {
       roomApi.getRoomInfo().then(rep => {
@@ -204,4 +223,5 @@ export default {
 .Notice li:first-of-type{
   border-top: none;
 }
+
 </style>

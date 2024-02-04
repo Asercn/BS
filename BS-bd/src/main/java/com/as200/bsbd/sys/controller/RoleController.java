@@ -43,7 +43,7 @@ public class RoleController {
                                  @RequestParam(value = "pageSize")Long pageSize,
                                  @RequestParam(value = "roleName", required = false)String roleName){
         LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper();
-        wrapper.eq(StringUtils.hasLength(roleName), Role::getRoleName, roleName);
+        wrapper.like(StringUtils.hasLength(roleName), Role::getRoleName, roleName);
 //        wrapper.orderByDesc(Role::getRoleId);
 
         Page<Role> page = new Page<>(pageNo,pageSize);

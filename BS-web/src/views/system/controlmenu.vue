@@ -2,13 +2,13 @@
 <el-main>
   <h3>菜单控制</h3>
   <el-divider/>
-  <el-card>
+<!--  <el-card>
     <el-input placeholder="菜单名称" style="width: 180px; margin-right: 0.5rem"></el-input>
-    <el-button type="primary">查询</el-button>
+    <el-button type="primary" >查询</el-button>
     <el-button type="normal">重置</el-button>
-  </el-card>
+  </el-card>-->
   <el-card>
-    <el-button size="small" @click="openDialog(null)">+新增</el-button>
+    <el-button @click="openDialog(null)" circle type="primary"><i class="el-icon-plus"></i></el-button>
 <!--    dialog-->
     <el-dialog :title="title" :visible.sync="dialogVisible" width="50%" @close="clearForm()">
       <el-form ref="menuFormRef" :model="menuForm" label-width="200px" label-position="right" :inline="true" :rules="menuFormRule">

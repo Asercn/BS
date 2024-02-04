@@ -5,18 +5,18 @@
   <el-card>
     <el-input v-model="searchModel.orderNumber"  placeholder="订单号" class="iinput"></el-input>
     <el-input v-model="searchModel.date" type="date"  placeholder="日期" class="iinput" ></el-input>
-    <el-button type="primary" @click="getOrderfrom"> 查 询</el-button>
+    <el-button type="primary" @click="getOrderfrom1"> 查 询</el-button>
     <el-button @click="reset">重 置</el-button>
   </el-card>
   <el-card>
     <el-row :gutter="20">
-      <el-col :span="12">
+      <el-col :span="8">
         <h4 style="color: #f9ca24">今日收入: {{ DIncome }}元</h4>
         <el-divider></el-divider>
         <span><h5>本月收入: {{ MIncome }}元</h5>
         <h5>今年收入: {{ YIncome }}元</h5></span>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="16">
 <!--        条形图-->
         <e-charts :option="option" style="height: 250px;"></e-charts>
       </el-col>
@@ -71,8 +71,11 @@ export default {
       orderfromApi.getOrderfrom(this.searchModel).then(rep => {
         this.orderfromForm = rep.data.rows
         this.total = rep.data.total
-        this.searchModel.pageNo = 1
       })
+    },
+    getOrderfrom1() {
+      this.searchModel.pageNo = 1
+      this.getOrderfrom()
     },
     handleSizeChange(pageSize) {
       this.searchModel.pageSize = pageSize
@@ -110,6 +113,7 @@ export default {
     reset() {
       this.searchModel.date = null
       this.searchModel.orderNumber = null
+      this.searchModel.pageNo = 1
       this.getOrderfrom()
     }
   },

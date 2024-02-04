@@ -62,7 +62,7 @@ public class OrderfromController {
                                   @RequestParam(value = "orderNumber", required = false)Integer orderNumber,
                                   @RequestParam(value = "date", required = false) String date) {
         LambdaQueryWrapper<Orderfrom> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(orderNumber != null, Orderfrom::getOrderNumber, orderNumber);
+        wrapper.like(orderNumber != null, Orderfrom::getOrderNumber, orderNumber);
         if (date != null) {
             LocalDate date1 = LocalDate.parse(date);
             wrapper.ge(date1 != null, Orderfrom::getDate, date1)

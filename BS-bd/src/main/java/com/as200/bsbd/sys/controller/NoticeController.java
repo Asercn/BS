@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Lang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +37,10 @@ public class NoticeController {
     public Result<?> getAllNotice(@RequestParam(value = "pageNo", required = true)Integer pageNo,
                                   @RequestParam(value = "pageSize", required = true)Integer pageSize) {
 
+        LambdaQueryWrapper<Notice> wrapper = new LambdaQueryWrapper<>();
+        wrapper.orderByDesc(Notice::getReleaseTime);
         Page<Notice> page = new Page<>(pageNo, pageSize);
-        noticeService.page(page);
+        noticeService.page(page,wrapper);
         Map<String, Object> data = new HashMap<>();
         data.put("noticeInfo",page.getRecords());
         data.put("total", page.getTotal());
@@ -51,6 +54,7 @@ public class NoticeController {
         LambdaQueryWrapper<Notice> wrapper = new LambdaQueryWrapper<>();
         // 查询没有隐藏的公告
         wrapper.eq(Notice::getHidden, "0");
+        wrapper.orderByDesc(Notice::getReleaseTime);
         return Result.success(noticeService.list(wrapper));
     }
 

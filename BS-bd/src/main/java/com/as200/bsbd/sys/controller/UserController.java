@@ -77,7 +77,7 @@ public class UserController {
                                  @RequestParam(value = "username", required = false)String userName){
         Map<String, Object> data = new HashMap<>();
         LambdaQueryWrapper<User> warpper = new LambdaQueryWrapper<>();
-        warpper.eq(StringUtils.hasLength(userName), User::getUsername, userName);
+        warpper.like(StringUtils.hasLength(userName), User::getUsername, userName);
         data.put("total",userService.count(warpper));
         data.put("userInfo", userService.getUserInfo(pageNo, pageSize, userName));
         return Result.success(data, "查询成功");

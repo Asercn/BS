@@ -8,36 +8,32 @@
         LEFT JOIN x_room AS c ON b.room_id = c.room_id
         <where>
             <if test="roomName != null and roomName != ''">
-                AND c.room_name = #{roomName}
+                AND c.room_name LIKE CONCAT('%', #{roomName}, '%')
             </if>
             <if test="customerName != null and customerName != ''">
-                AND a.`name` = #{customerName}
+                AND a.`name` LIKE CONCAT('%', #{customerName}, '%')
             </if>
             <if test="customerPhone != null and customerPhone != ''">
-                AND a.phone = #{customerPhone}
+                AND a.phone LIKE CONCAT('%', #{customerPhone}, '%')
             </if>
         </where>
         ORDER BY b.end_date desc
         LIMIT #{offset},#{pageSize}
     </select>
     <select id="getCustomerRoomTotal" resultType="Integer">
-        SELECT
-            COUNT(*)
-        FROM
-            x_customer_room AS CR,
-            x_customer AS C,
-            x_room AS R
+        SELECT COUNT(*)
+        FROM x_customer_room AS CR
+        INNER JOIN x_customer AS C ON CR.customer_id = C.id
+        INNER JOIN x_room AS R ON CR.room_id = R.room_id
         <where>
-            AND CR.customer_id = C.id
-            AND CR.room_id = R.room_id
             <if test="roomName != null and roomName != '' ">
-                AND R.`room_name` = #{roomName}
+                AND R.`room_name` LIKE CONCAT('%', #{roomName}, '%')
             </if>
             <if test="customerPhone != null and customerPhone != ''">
-                AND C.phone = #{customerPhone}
+                AND C.phone LIKE CONCAT('%', #{customerPhone}, '%')
             </if>
             <if test="customerName != null and customerName != ''">
-                AND C.`name` = #{customerName}
+                AND C.`name` LIKE CONCAT('%', #{customerName}, '%')
             </if>
         </where>
     </select>
