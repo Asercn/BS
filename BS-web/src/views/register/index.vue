@@ -1,11 +1,9 @@
 <template>
   <div class="register-container">
     <el-form ref="registerRef" :model="registerForm" :rules="registerRule" class="register-form" label-position="left">
-
       <div class="title-container">
         <h3 class="title">注册用户</h3>
       </div>
-
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -21,7 +19,7 @@
         </span>
         <el-input
           v-model="registerForm.password"
-          :type="passwordType"
+          type="password"
           placeholder="密码"
         />
       </el-form-item>
@@ -31,11 +29,10 @@
         </span>
         <el-input
           v-model="registerForm.repassword"
-          :type="passwordType"
+          type="password"
           placeholder="再次输入密码"
         />
       </el-form-item>
-
       <el-form-item prop="email">
         <span class="svg-container">
           <i class="el-icon-star-on"></i>
@@ -45,7 +42,6 @@
           placeholder="联系邮箱"
         />
       </el-form-item>
-
       <el-form-item prop="phone">
         <span class="svg-container">
           <i class="el-icon-phone"></i>
@@ -55,7 +51,6 @@
           placeholder="手机号码"
         />
       </el-form-item>
-
       <el-button type="primary" style="width: 68%;margin-bottom: 10px;margin-right: 2%;" @click="saveRegisterForm">注册</el-button>
       <el-button style="width: 30%;margin-bottom: 10px;" @click="resetForm">重置 <i class="el-icon-refresh"></i></el-button>
       <el-button style="width: 100%;margin-bottom: 30px;" @click.prevent.native="handleLogin">返回</el-button>
@@ -70,8 +65,13 @@ export default {
   name: 'Register',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (value.length < 2) {
+      const regex = /^[a-zA-Z0-9_]+$/
+      if (!regex.test(value)) {
+        callback(new Error('用户名只允许字母、数字或下划线'))
+      } else if (value.length < 2) {
         callback(new Error('用户名不能小于2位'))
+      } else if (value.length >= 20) {
+        callback(new Error('用户名长度限制小于20'))
       } else {
         callback()
       }
@@ -79,6 +79,8 @@ export default {
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('密码不能小于6位'))
+      } else if (value.length >= 100) {
+        callback(new Error('密码不能大于100位'))
       } else {
         callback()
       }
@@ -98,7 +100,13 @@ export default {
       }
     }
     return {
-      registerForm: {},
+      registerForm: {
+        username: '',
+        password: '',
+        repassword: '',
+        email: '',
+        phone: ''
+      },
       registerRule: {
         username: [
           { required: true, trigger: 'blur', message: '用户名不能为空' },
@@ -117,13 +125,12 @@ export default {
           { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
         ],
         phone: [
+          { type: 'number', message: '电话号码只能为数字', trigger: 'blur' },
           { required: true, message: '电话号码不能为空', trigger: 'blur' },
-          { trigger: 'blur', validator: validatePhone },
-          { type: 'number', message: '电话号码只能为数字', trigger: 'blur' }
+          { trigger: 'blur', validator: validatePhone }
         ]
 
       },
-      passwordType: 'password'
 
     }
   },
@@ -165,6 +172,8 @@ export default {
         }
       })
     }
+  },
+  created() {
   }
 }
 </script>
@@ -203,10 +212,10 @@ $cursor: #fff;
       height: 47px;
       caret-color: $cursor;
 
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 0px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
+      //&:-webkit-autofill {
+      //  box-shadow: 0 0 0px 0px $bg inset !important;
+      //  -webkit-text-fill-color: $cursor !important;
+      //}
     }
   }
 

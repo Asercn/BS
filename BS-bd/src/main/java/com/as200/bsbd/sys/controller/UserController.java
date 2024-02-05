@@ -6,6 +6,7 @@ import com.as200.bsbd.sys.service.IRoleService;
 import com.as200.bsbd.sys.service.IUserRoleService;
 import com.as200.bsbd.sys.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -136,9 +137,10 @@ public class UserController {
 
     @ApiOperation("根据传入的用户名来判断数据库中是否有这个用户名由此判断能否注册此用户")
     @GetMapping("/checkUser")
-    public Result<Boolean> CheckUser(@RequestParam String username) {
+    public Result<Boolean> CheckUser(@RequestParam(value = "username")String username,
+                                     @RequestParam(value = "userId", required = false) Integer userId) {
         // 查询数据库中是否存在该用户名
-        Boolean data = userService.findByUsername(username);
+        Boolean data = userService.findByUsername(username,userId);
         return Result.success(data);
     }
 

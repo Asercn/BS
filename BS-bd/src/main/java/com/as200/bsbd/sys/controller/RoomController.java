@@ -122,12 +122,12 @@ public class RoomController {
     // 根据房间ID删除房间
     @DeleteMapping("/{roomId}")
     public Result<?> deleteRoom(@PathVariable(value = "roomId") Integer roomId){
-        roomService.removeById(roomId);
+        roomService.removeRoom(roomId);
         return Result.success("删除成功");
     }
 
-    @Value("${bs-config.web-path}")
-    private String webPath;
+    @Value("${bs-config.path}")
+    private String Path;
 
     @ApiOperation("上传图片")
     @PostMapping("/upImage")
@@ -140,15 +140,15 @@ public class RoomController {
         String Originalfilename = file.getOriginalFilename();
         // 防止重名覆盖，获取系统时间戳+原始文件的后缀名
         String filename = System.currentTimeMillis()+"."+Originalfilename.substring(Originalfilename.lastIndexOf(".")+1);
-//        String filename = file.getOriginalFilename();
         // 设置保存地址
-        String path = webPath;
+        String path = Path;
         File dest = new File(path+filename);
         // 判断文件夹是否存在
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();
         }
         try {
+
             // 上传文件
             file.transferTo(dest);
             return Result.success(filename, "文件"+ filename +"上传成功");

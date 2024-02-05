@@ -34,6 +34,8 @@ export default {
     const validateNewPassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('密码不能小于6位'))
+      } else if (value.length >= 100) {
+        callback(new Error('密码不能大于100位'))
       } else {
         callback()
       }

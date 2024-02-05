@@ -4,7 +4,8 @@
   <el-divider/>
   <el-card>
     <el-input v-model="searchModel.username" placeholder="用户名" style="width: 180px; margin-right: 0.5rem" clearable></el-input>
-    <el-button @click="getUserInfo" type="primary">查询</el-button>
+    <el-button @click="getUserInfo1" type="primary">查询</el-button>
+    <el-button @click="reset">重置</el-button>
   </el-card>
   <el-card>
     <!--        dialog-->
@@ -86,6 +87,18 @@ import {
 import roleApi from '@/api/role'
 export default {
   data() {
+    const validateUsername = (rule, value, callback) => {
+      const regex = /^[a-zA-Z0-9_]+$/
+      if (!regex.test(value)) {
+        callback(new Error('用户名只允许字母、数字或下划线'))
+      } else if (value.length < 2) {
+        callback(new Error('用户名不能小于2位'))
+      } else if (value.length >= 20) {
+        callback(new Error('用户名长度限制小于20'))
+      } else {
+        callback()
+      }
+    }
     const validateNumber = (rule, value, callback) => {
       if (value < 9999999999 || value > 100000000000) {
         callback(new Error('请输入11位数字'))
@@ -97,18 +110,21 @@ export default {
       formLabelWidth: '5rem',
       rules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' }
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { trigger: 'blur', validator: validateUsername },
+          { trigger: 'blur', validator: this.checkUsername }
         ],
         role_desc: [
           { required: true, message: '请选择用户职位', trigger: 'blur' }
         ],
         email: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { type: 'email', message: '输入正确的邮箱格式', trigger: ['blur', 'change'] }
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
         ],
         phone: [
-          { required: true, message: '请输入电话号码', trigger: 'blur' },
-          { validator: validateNumber, trigger: ['change'] }
+          { type: 'number', message: '电话号码只能为数字', trigger: 'blur' },
+          { required: true, message: '电话号码不能为空', trigger: 'blur' },
+          { validator: validateNumber, trigger: 'blur' }
         ]
 
       },
@@ -139,6 +155,23 @@ export default {
   computed: {
   },
   methods: {
+    checkUsername(rule, value, callback) {
+      const id = this.userForm.id
+      // 调用后端API检查用户名是否存在
+      this.$axios.get('/user/checkUser', { params: { username: value, userId: id }})
+        .then(rep => {
+          if (rep.data.data) {
+            callback(new Error('用户已存在'))
+          } else {
+            callback()
+          }
+        })
+    },
+    reset() {
+      this.searchModel.username = ''
+      this.searchModel.pageNo = 1
+      this.getUserInfo()
+    },
     saveUserForm() {
       this.$refs.userFormref.validate(valid => {
         if (valid) {
@@ -195,6 +228,7 @@ export default {
       getUserInfoOrByUserID(row.id).then(rep => {
         this.dialogFormVisible = true
         this.userForm = rep.data
+        this.userForm.phone = Number(this.userForm.phone)
         this.userTitle = '用户' + rep.data.username
       })
     },
@@ -207,11 +241,15 @@ export default {
       this.getUserInfo()
     },
     getUserInfo() {
-      this.searchModel.pageNo = 1
+      // this.searchModel.pageNo = 1
       getUserInfo(this.searchModel).then(rep => {
         this.tableData = rep.data.userInfo
         this.total = rep.data.total
       })
+    },
+    getUserInfo1() {
+      this.searchModel.pageNo = 1
+      this.getUserInfo()
     },
     getRole() {
       roleApi.getRole().then(rep => {

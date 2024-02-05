@@ -17,7 +17,6 @@
             <el-form-item label="上级菜单(最上级为0)" prop="parentId"><el-input-number v-model="menuForm.parentId" :min="0"></el-input-number></el-form-item>
             <el-form-item label="菜单名称" prop="title"><el-input v-model="menuForm.title"></el-input></el-form-item>
             <el-form-item label="name" prop="name"><el-input v-model="menuForm.name"></el-input></el-form-item>
-<!--            <el-form-item label="路径名" prop="path"><el-input v-model="menuForm.path"></el-input></el-form-item>-->
           </el-col>
           <el-col :span="12">
             <el-form-item label="定向到(父级填写)" prop="redirect"><el-input v-model="menuForm.redirect"></el-input></el-form-item>
@@ -137,16 +136,15 @@ export default {
             this.$alert(rep.message, '提示', {
               confirmButtonText: '确定',
               callback: () => {
-                // 异步操作完成后再刷新页面
-                this.getAllMenu()
                 // 可能会改变路由状态，所以刷新页面
                 this.$router.go(0)
               }
             })
+            this.dialogVisible = false
+            this.getAllMenu()
           })
         }
       })
-      this.dialogVisible = false
     },
     deleteMenu(ID) {
       this.$confirm(`删除编号为:${ID}的菜单, 是否继续?`, '提示', {

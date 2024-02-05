@@ -108,10 +108,15 @@ export default {
   methods: {
     beforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2
+      const isImage = file.type.startsWith('image/')
+      console.log(file.type)
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      return isLt2M
+      if (!isImage) {
+        this.$message.error('只能上传图片文件')
+      }
+      return isLt2M && isImage
     },
     handle_success(res) {
       console.log(res.data)

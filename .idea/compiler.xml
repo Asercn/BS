@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="BS-bd" target="9" />
+      <module name="BS-bd" target="1.8" />
       <module name="x-admin" target="1.8" />
     </bytecodeTargetLevel>
   </component>

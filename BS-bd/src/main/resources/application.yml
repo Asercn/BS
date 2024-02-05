@@ -8,6 +8,10 @@ spring:
   redis:
     port: 6379
     host: localhost
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
 logging:
   level:
     com.as200.bsbd: debug
@@ -19,6 +23,6 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
   type-aliases-package: com.as200.bsbd.*.entity
 bs-config:
-  web-path1: http://localhost:9528/
-  web-path: F:\Project\BS\BS-web\public\home_images\
+  web-path: http://localhost:9528/home_images/
+  path: F:\Project\BS\BS-web\public\home_images\
   web-url: F:\Project\BS\BS-web\src\views\

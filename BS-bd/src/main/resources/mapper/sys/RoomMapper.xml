@@ -10,4 +10,17 @@
         where
             a.end_date > CURDATE()
     </select>
+    <select id="getOrderFormID" resultType="Integer">
+        SELECT xo.id
+        FROM x_orderfrom xo
+                 INNER JOIN x_customer_room xcr ON xo.order_number = xcr.id
+                 INNER JOIN x_room xr ON xcr.room_id = xr.room_id
+        WHERE xr.room_id = #{roomId}
+    </select>
+    <select id="getCustomerRoomId" resultType="Integer">
+        SELECT xcr.id
+        FROM x_customer_room xcr
+                 INNER JOIN x_room xr ON xcr.room_id = xr.room_id
+        WHERE xr.room_id = #{roomId}
+    </select>
 </mapper>

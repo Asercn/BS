@@ -5,16 +5,17 @@
     <el-card>
       <el-input v-model="searchModel.roleName" placeholder="角色名" style="width: 180px; margin-right: 0.5rem" clearable></el-input>
       <el-button @click="getRoleList" type="primary">查询</el-button>
+      <el-button @click="reset">重置</el-button>
     </el-card>
     <el-card>
       <el-button type="primary" icon="el-icon-plus" circle @click="openEditUI(null)"></el-button>  <!-- 新增按钮-->
       <!--        dialog-->
       <el-dialog @close="clearFrom" :title="RoleTitle" :visible.sync="dialogFormVisible" width="30rem">
         <el-form :model="roleForm" :rules="rules" ref="roleFormref">
-          <el-form-item label="角色名" :label-width="formLabelWidth">
+          <el-form-item label="角色名" :label-width="formLabelWidth" prop="roleName">
             <el-input v-model="roleForm.roleName" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="角色描述" :label-width="formLabelWidth">
+          <el-form-item label="角色描述" :label-width="formLabelWidth" prop="roleDesc">
             <el-input v-model="roleForm.roleDesc" autocomplete="off" class="inputWidth"></el-input>
           </el-form-item>
           <el-form-item label="权限设置" :label-width="formLabelWidth">
@@ -59,6 +60,27 @@ import MenuApi from '@/api/menu'
 
 export default {
   data() {
+    const validateRoleName = (rule, value, callback) => {
+      const regex = /^[a-zA-Z0-9_]+$/
+      if (!regex.test(value)) {
+        callback(new Error('角色名只允许字母、数字或下划线'))
+      } else if (value.length < 2) {
+        callback(new Error('角色名不能小于2位'))
+      } else if (value.length >= 50) {
+        callback(new Error('角色名长度限制小于50'))
+      } else {
+        callback()
+      }
+    }
+    const validateRoleDesc = (rule, value, callback) => {
+      if (value.length < 2) {
+        callback(new Error('角色描述不能小于2位'))
+      } else if (value.length >= 50) {
+        callback(new Error('角色描述长度限制小于50'))
+      } else {
+        callback()
+      }
+    }
     return {
       menuList: [],
       menuProps: {
@@ -77,12 +99,24 @@ export default {
       roleForm: {},
       formLabelWidth: '5rem',
       rules: {
-        roleName: { required: true, message: '请输入角色名', trigger: 'blur' },
-        roleDesc: { required: true, message: '请输入角色描述', trigger: 'blur' }
+        roleName: [
+          { required: true, message: '请输入角色名', trigger: 'blur' },
+          { trigger: 'blur', validator: validateRoleName }
+        ],
+        roleDesc: [
+          { required: true, message: '请输入角色描述', trigger: 'blur' },
+          { trigger: 'blur', validator: validateRoleDesc }
+        ]
       }
     }
   },
   methods: {
+    reset() {
+      this.searchModel.roleName = ''
+      this.searchModel.pageNo = 1
+      this.getAllMenu()
+      this.getRoleList()
+    },
     getAllMenu() {
       MenuApi.getAllMenu().then(rep => {
         this.menuList = rep.data

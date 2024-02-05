@@ -14,7 +14,7 @@
          <el-row>
            <el-col :span="12">
              <el-form-item label="姓名:" :label-width="formLabelWidth" prop="customerName">
-               <el-input v-model="customerRoomForm.customerName" autocomplete="off" style="width: 10rem;"></el-input>
+               <el-input v-model="customerRoomForm.customerName" autocomplete="off" style="width: 10rem;" placeholder="请输入姓名"></el-input>
              </el-form-item>
              <el-form-item label="性别:" :label-width="formLabelWidth" prop="sex">
                <el-select v-model="customerRoomForm.sex" placeholder="请选择性别" style="width: 10rem;">
@@ -27,10 +27,10 @@
                </el-select>
              </el-form-item>
              <el-form-item label="手机号:" :label-width="formLabelWidth" prop="customerPhone">
-               <el-input v-model.number.trim="customerRoomForm.customerPhone" autocomplete="off" style="width: 15rem;"></el-input>
+               <el-input v-model.number.trim="customerRoomForm.customerPhone" autocomplete="off" style="width: 15rem;" placeholder="请输入手机号"></el-input>
              </el-form-item>
              <el-form-item label="身份证号:" :label-width="formLabelWidth" prop="customerIdNumber">
-               <el-input v-model="customerRoomForm.customerIdNumber" autocomplete="off" style="width: 15rem;"></el-input>
+               <el-input v-model="customerRoomForm.customerIdNumber" autocomplete="off" style="width: 15rem;" placeholder="请输入身份证号"></el-input>
              </el-form-item>
              <el-form-item label="入住时间:" :label-width="formLabelWidth" prop="startDate" >
                <el-date-picker
@@ -94,12 +94,14 @@
                 class="r el-icon-s-home"
                 @click="openRoomUI(v)"
                 v-if="!isRoomIdInboRoomList(v.roomId)">
-                {{ v.roomName }}
+                <div>房型：{{ v.roomType }}</div>
+                <div>房号：{{ v.roomName }}</div>
                 <div>价格: {{ v.roomPrice }}</div>
               </el-button>
               <el-button class="r el-icon-s-home activeState" @click="exitRoomUI(v)" v-else>
-                {{ v.roomName }}
-                <div>已 开</div>
+                <div>房型：{{ v.roomType }}</div>
+                <div>房号：{{ v.roomName }}</div>
+                <div>价格: {{ v.roomPrice }}</div>
               </el-button>
             </el-col>
           </el-row>
@@ -153,7 +155,7 @@ import orderfromApi from '@/api/orderfrom'
 export default {
   data() {
     const validateStartDate = (rule, value, callback) => {
-      if (value === '') {
+      if (value === null || value.length === 0 || value === undefined) {
         callback(new Error('选择入住日期'))
       } else {
         if (this.customerRoomForm.endDate !== null) {
@@ -163,10 +165,10 @@ export default {
       }
     }
     const validateEndDate = (rule, value, callback) => {
-      if (value === '') {
+      if (value === null || value.length === 0 || value === undefined) {
         callback(new Error('选择退房日期'))
-      } else if (value < this.customerRoomForm.startDate) {
-        callback(new Error('退房住日期不能比入住日期早!'))
+      } else if (value <= this.customerRoomForm.startDate) {
+        callback(new Error('退房日期不能早于或等于入住日期!'))
       } else {
         callback()
       }
@@ -183,9 +185,10 @@ export default {
         customerName: [
           { required: true, message: '请输入姓名', trigger: 'blur' }
         ],
-        sex: { required: true, message: '请选择性别', trigger: 'blur' },
+        sex: { required: true, message: '请选择性别', trigger: ['change'] },
         customerPhone: [
           { required: true, message: '请输入电话号码', trigger: 'blur' },
+          { type: 'number', message: '电话号码只能为数字', trigger: 'blur' },
           { validator: validateNumber, trigger: 'blur' }
         ],
         customerIdNumber: [
@@ -389,7 +392,6 @@ export default {
 
 <style scoped>
 .flex-container{
-
 }
 .r {
   width: 10em;
@@ -408,4 +410,7 @@ export default {
   color: white;
 }
 
+activeState:focus {
+  background-color: #ffffff;
+}
 </style>

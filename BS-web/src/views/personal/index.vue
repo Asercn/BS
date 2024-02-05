@@ -12,6 +12,10 @@
           <div>
             <ul class="list-group">
               <li class="list-group-item">
+                <i class="el-icon-s-flag">用户编号</i>
+                <div class="pull-right">{{ user.id }}</div>
+              </li>
+              <li class="list-group-item">
                 <i class="el-icon-user">用户名称</i>
                 <div class="pull-right">{{ user.username }}</div>
               </li>

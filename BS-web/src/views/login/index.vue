@@ -1,9 +1,9 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="new-password" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">欢迎使用宾馆后台管理系统</h3>
+        <h3 class="title">欢迎使用宾馆管理系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -57,14 +57,20 @@ export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+      if (value === null || value.length === 0) {
+        callback(new Error('请输入用户名'))
+      } else if (!validUsername(value)) {
         callback(new Error('请输入正确的用户名'))
+      } else if (value.length >= 20) {
+        callback(new Error('用户名长度限制小于20'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
+      if (value === null || value.length === 0) {
+        callback(new Error('请输入密码'))
+      } else if (value.length < 6) {
         callback(new Error('密码不能少于6位'))
       } else {
         callback()
@@ -160,10 +166,10 @@ $cursor: #fff;
       height: 47px;
       caret-color: $cursor;
 
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
+      //&:-webkit-autofill {
+      //  box-shadow: 0 0 0px 1000px $bg inset !important;
+      //  -webkit-text-fill-color: $cursor !important;
+      //}
     }
   }
 

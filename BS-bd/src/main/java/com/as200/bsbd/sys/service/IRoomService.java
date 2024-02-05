@@ -16,4 +16,6 @@ import java.util.Map;
 public interface IRoomService extends IService<Room> {
 
     Map<String, String> getRoomInfo();
+
+    void removeRoom(Integer roomId);
 }

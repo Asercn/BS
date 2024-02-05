@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <el-header>
-      <h1>欢迎: {{ name }}</h1>
+      <h1>欢迎: {{ name }} 使用宾馆系统</h1>
     </el-header>
     <!--      展示栏-->
     <el-divider/>

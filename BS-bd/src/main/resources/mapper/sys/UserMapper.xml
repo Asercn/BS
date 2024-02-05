@@ -18,7 +18,7 @@
         <where>
             AND U.deleted = 0
             <if test="username != null and username != ''">
-                AND U.username = #{username}
+                AND U.username LIKE CONCAT('%', #{username}, '%')
             </if>
         </where>
         LIMIT #{pageNo}, #{pageSize}

@@ -141,8 +141,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Boolean findByUsername(String username) {
+    public Boolean findByUsername(String username, Integer userId) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        if (userId != null) {
+            wrapper.ne(User::getId, userId);
+        }
         wrapper.eq(StringUtils.hasLength(username), User::getUsername, username);
         User data = this.baseMapper.selectOne(wrapper);
         if (data != null) {

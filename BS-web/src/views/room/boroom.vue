@@ -6,7 +6,7 @@
   <el-card>
     <el-input v-model="searchModel.roomName" placeholder="房间号" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
     <el-input v-model="searchModel.customerName" placeholder="姓名" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
-    <el-input v-model="searchModel.customerPhone" placeholder="电话" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
+    <el-input v-model.number="searchModel.customerPhone" placeholder="电话" style="width: 20vh; margin-right: 0.5rem" clearable></el-input>
     <el-button @click="getCustomer" type="primary">查询</el-button>
     <el-button @click="reset">重 置</el-button>
   </el-card>
