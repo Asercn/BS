@@ -35,10 +35,12 @@ public class NoticeController {
     @ApiOperation("分页获取所有的公告")
     @GetMapping
     public Result<?> getAllNotice(@RequestParam(value = "pageNo", required = true)Integer pageNo,
-                                  @RequestParam(value = "pageSize", required = true)Integer pageSize) {
+                                  @RequestParam(value = "pageSize", required = true)Integer pageSize,
+                                  @RequestParam(value = "title", required = false)String title) {
 
         LambdaQueryWrapper<Notice> wrapper = new LambdaQueryWrapper<>();
         wrapper.orderByDesc(Notice::getReleaseTime);
+        wrapper.like(StringUtils.hasLength(title), Notice::getTitle, title);
         Page<Notice> page = new Page<>(pageNo, pageSize);
         noticeService.page(page,wrapper);
         Map<String, Object> data = new HashMap<>();

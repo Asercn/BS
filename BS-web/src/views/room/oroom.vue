@@ -180,6 +180,15 @@ export default {
         callback()
       }
     }
+    const validateIdNumber = (rule, value, callback) => {
+      // 身份证号码验证正则表达式
+      const idCardRegex = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+      if (!idCardRegex.test(value)) {
+        callback(new Error('身份证号码格式不正确'))
+      } else {
+        callback()
+      }
+    }
     return {
       rules: {
         customerName: [
@@ -193,7 +202,7 @@ export default {
         ],
         customerIdNumber: [
           { required: true, message: '请输入身份证号', trigger: 'blur' },
-          { min: 18, max: 18, message: '身份证号为18位，请检查', trigger: 'blur' }
+          { validator: validateIdNumber, trigger: '' }
         ],
         startDate: [
           { required: true, validator: validateStartDate, trigger: 'blur' }

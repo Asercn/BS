@@ -118,7 +118,7 @@ export default {
   name: "roomreservation",
   data() {
     const validateStartDate = (rule, value, callback) => {
-      if (value === '') {
+      if (value === null || value.length === 0 || value === undefined) {
         callback(new Error('选择入住日期'))
       } else {
         if (this.customerRoomForm.endDate !== null) {
@@ -128,10 +128,10 @@ export default {
       }
     }
     const validateEndDate = (rule, value, callback) => {
-      if (value === '') {
+      if (value === null || value.length === 0 || value === undefined) {
         callback(new Error('选择退房日期'))
-      } else if (value < this.customerRoomForm.startDate) {
-        callback(new Error('退房住日期不能比入住日期早!'))
+      } else if (value <= this.customerRoomForm.startDate) {
+        callback(new Error('退房日期不能早于或等于入住日期!'))
       } else {
         callback()
       }
@@ -139,6 +139,15 @@ export default {
     const validateNumber = (rule, value, callback) => {
       if (value < 9999999999 || value > 100000000000) {
         callback(new Error('请输入11位数字'))
+      } else {
+        callback()
+      }
+    }
+    const validateIdNumber = (rule, value, callback) => {
+      // 身份证号码验证正则表达式
+      const idCardRegex = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+      if (!idCardRegex.test(value)) {
+        callback(new Error('身份证号码格式不正确'))
       } else {
         callback()
       }
@@ -174,11 +183,12 @@ export default {
         sex: { required: true, message: '请选择性别', trigger: 'blur' },
         customerPhone: [
           { required: true, message: '请输入电话号码', trigger: 'blur' },
+          { type: 'number', message: '电话号码只能为数字', trigger: 'blur' },
           { validator: validateNumber, trigger: 'blur' }
         ],
         customerIdNumber: [
           { required: true, message: '请输入身份证号', trigger: 'blur' },
-          { min: 18, max: 18, message: '身份证号为18位，请检查', trigger: 'blur' }
+          { validator: validateIdNumber, trigger: '' }
         ],
         startDate: [
           { required: true, validator: validateStartDate, trigger: 'blur' }

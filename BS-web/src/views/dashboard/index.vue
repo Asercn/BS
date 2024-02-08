@@ -147,8 +147,7 @@ export default {
       const [year, month, day, hour, minute, second] = dateArray
       const date = new Date(year, month - 1, day, hour, minute, second)
       const formattedDate =
-        `${date.getFullYear()}年
-        ${this.padZero(date.getMonth() + 1)}月${this.padZero(date.getDate())}日${this.padZero(date.getHours())}:${this.padZero(date.getMinutes())}:${this.padZero(date.getSeconds())}`
+        `${date.getFullYear()}年${this.padZero(date.getMonth() + 1)}月${this.padZero(date.getDate())}日${this.padZero(date.getHours())}:${this.padZero(date.getMinutes())}:${this.padZero(date.getSeconds())}`
       return formattedDate
     },
     padZero(value) {

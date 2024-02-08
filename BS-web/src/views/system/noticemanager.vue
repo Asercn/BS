@@ -8,14 +8,19 @@
     <el-main>
       <el-divider></el-divider>
       <el-card>
+        <el-input v-model="searchModel.title" placeholder="公告标题" style="width: 180px; margin-right: 0.5rem" clearable></el-input>
+        <el-button @click="SelectNotice" type="primary">查询</el-button>
+        <el-button @click="reset">重置</el-button>
+      </el-card>
+      <el-card>
         <el-button type="primary" icon="el-icon-plus" circle @click="openDialogUI(null)"></el-button>  <!-- 新增按钮-->
         <!--        dialog-->
         <el-dialog @close="clearFrom" :title="noticeTitle" :visible.sync="dialogFormVisible" width="30rem">
           <el-form :model="noticeForm" :rules="rules" ref="roleFormref">
-            <el-form-item label="标题" :label-width="formLabelWidth">
+            <el-form-item label="标题" :label-width="formLabelWidth" prop="title">
               <el-input v-model="noticeForm.title" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="文字" :label-width="formLabelWidth">
+            <el-form-item label="文字" :label-width="formLabelWidth" prop="text">
               <el-input v-model="noticeForm.text" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="状态" :label-width="formLabelWidth">
@@ -73,8 +78,15 @@ import RoleApi from "@/api/role";
 
 export default {
   data() {
+    const validateTitle = (rule, value, callback) => {
+      if (value.length > 50) {
+        callback(new Error('标题不能大于50个字'))
+      } else {
+        callback()
+      }
+    }
     return {
-      formLabelWidth: '3rem',
+      formLabelWidth: '5rem',
       dialogFormVisible: false,
       noticeTitle: null,
       searchModel: {
@@ -84,15 +96,33 @@ export default {
       total: null,
       noticeInfo: [],
       noticeForm: {
-        hidden: '0'
+        hidden: '0',
+        title: '',
+        text: ''
       },
-      rules: {},
+      rules: {
+        title: [
+          { required: true, message: '请输入标题', trigger: 'change' },
+          { validator: validateTitle, trigger: 'blur' }
+        ],
+        text: [
+          { required: true, message: '请输入文字', trigger: 'change' }
+        ]
+      },
     }
   },
   created() {
     this.getAllNotice()
   },
   methods: {
+    SelectNotice() {
+      this.searchModel.pageNo = 1
+      this.getAllNotice()
+    },
+    reset() {
+      this.searchModel.title = ''
+      this.getAllNotice()
+    },
     formatDate(dateArray) {
       if (!dateArray || dateArray.length !== 6) {
         return ''
@@ -137,16 +167,16 @@ export default {
               type: "success"
             })
             this.getAllNotice()
-
+            this.dialogFormVisible = false
           })
         } else {
           console.log('提交失败')
           return false
         }
       })
-      this.dialogFormVisible = false
     },
     clearFrom() {
+      this.$refs.roleFormref.resetFields()
       this.noticeForm = {
         hidden: '0'
       }

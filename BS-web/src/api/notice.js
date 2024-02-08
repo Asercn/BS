@@ -7,7 +7,8 @@ export default {
       method: 'get',
       params: {
         pageNo: searchModel.pageNo,
-        pageSize: searchModel.pageSize
+        pageSize: searchModel.pageSize,
+        title: searchModel.title
       }
     })
   },

@@ -55,16 +55,24 @@ import noticeApi from '@/api/notice'
 
 export default {
   data() {
+    const validateTitle = (rule, value, callback) => {
+      if (value.length > 50) {
+        callback(new Error('标题不能大于50个字'))
+      } else {
+        callback()
+      }
+    }
     return {
       searchText: '',
       messages: [],
       newMessage: {},
       rules: {
         title: [
-          { required: true, messages: '请输入标题', trigger: 'change' }
+          { required: true, message: '请输入标题', trigger: 'change' },
+          { validator: validateTitle, trigger: 'blur' }
         ],
         text: [
-          { required: true, messages: '请输入文字', trigger: 'change' }
+          { required: true, message: '请输入文字', trigger: 'change' }
         ]
       },
       messageCount: []
